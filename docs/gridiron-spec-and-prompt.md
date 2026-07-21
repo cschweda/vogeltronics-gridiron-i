@@ -1,6 +1,6 @@
 # VogelTronics *Gridiron* (Gridiron 1) — Web Recreation Spec + Build Prompt
 
-*A solo, keyboard-playable, browser homage to the 1977 Mattel Electronics Football, reskinned in the VogelTronics universe ("Games That Think!"). Vite + TypeScript, deployable on Netlify. This is a standalone game — **Gridiron 1, running only**. A separate future project, **Gridiron 2**, will reuse this engine and add passing (and whatever Mattel Football II introduced). All mechanics below come from the original 1977 Mattel manual.*
+*A solo, keyboard-playable, browser homage to the 1977 Mattel Electronics Football, rebuilt as an original product of the VogelTronics universe ("Games That Think!"). Vite + TypeScript, deployable on Netlify. This is a standalone game — **Gridiron 1, running only**. A separate future project, **Gridiron 2**, will reuse this engine and add passing (and whatever Mattel Football II introduced). All mechanics below come from the original 1977 Mattel manual.*
 
 ---
 
@@ -20,42 +20,42 @@ Because Gridiron 2 is a later, separate project, the one design rule that matter
 
 **Movement.** The running back moves **1 yard per key press** (discrete, not held). Arrow keys: **▲ / ▼** change lanes; **►** runs toward the goal (the original's forward key wears a two-headed **◄▶** glyph — "toward the opponent's goal," which in solo is always right). No backward running (authentic to this model). The **first direction press starts the play** — the clock starts and the tacklers begin to rush.
 
-**Pre-snap formation.** The runner (bright) lines up in **column 0, middle row** — "at the end of the field in front of his goal posts" (manual p. 6). The manual fixes no defensive formation — its two field diagrams show *different* scatters — so the defense lines up **semi-randomly each play** (seeded RNG): 5 defenders in distinct cells across **columns 2–8**, always at least one deep man in **columns 6–8** (the manual's "safety man"), never in columns 0–1. One blip per cell — defenders never overlap.
+**Pre-snap formation.** The runner (bright) lines up in **column 0, middle row** — the manual (p. 6) starts him at his own end of the field, centered before the goal posts. The manual fixes no defensive formation — its two field diagrams show *different* scatters — so the defense lines up **semi-randomly each play** (seeded RNG): 5 defenders in distinct cells across **columns 2–8**, always at least one deep man in **columns 6–8** (the manual's deep safety), never in columns 0–1. One blip per cell — defenders never overlap.
 
 **Tackling.** A tackle occurs whenever the runner and a defender occupy the **same cell — no matter who moved into whom** (front, side, or behind; this is also what keeps forward-mashing honest). On a tackle the **referee's whistle** sounds, the play ends, and **the tackler that made the hit blinks on/off** (~2 Hz, hard-capped below 3 flashes/sec for photosensitivity) until ST/SC is pressed. Under `prefers-reduced-motion` the blink is replaced by a **steady-bright** tackler (all others stay dim) — the information survives without flashing.
 
 **Field scroll.** If the runner clears the 9-yard window in one run, the computer returns him to the start and play continues (the field scrolled 9 yards).
 
-**Downs & scoring.** 4 downs to gain 10 yards for a first down. **Touchdown = 7**, **Field goal = 3**. Every score plays the **"CHARGE"** sound.
+**Downs & scoring.** 4 downs to gain 10 yards for a first down. **Touchdown = 7**, **Field goal = 3**. Every score plays the **VogelTronics scoring fanfare** — an original bugle-style riff with ballpark energy. (The real unit played the stadium "Charge!" melody, which carries a genuine composition claim; we deliberately don't quote it — or any other real tune.)
 
-**Kicking (K key, 4th down only; ignored on downs 1–3).** A kick travels **1–65 yards** (uniform, via the seeded RNG) — and that single roll *is* the punt-vs-FG decision, the simplest mechanism consistent with the manual's three statements (1–65 range; "the computer will automatically decide whether to PUNT or to make a FIELD GOAL"; "the closer you are to the goal, the better your chances"): if the kick **reaches the goal line (distance ≥ yards to goal)** it's a **made field goal** — **charge**, 3 points; if it falls short it's a **punt** — **two whistles**. There is **no missed-FG state**, and from beyond 65 out a kick is always a punt. On 4th down you may instead run; failing is a **turnover on downs** — **two whistles**. *Two whistles always mean: drive over, no points.*
+**Kicking (K key, 4th down only; ignored on downs 1–3).** A kick travels **1–65 yards** (uniform, via the seeded RNG) — and that single roll *is* the punt-vs-FG decision, the simplest mechanism consistent with the manual's three statements (p. 3: kicks travel 1–65 yards; the computer alone chooses punt vs field goal; your FG odds improve the nearer you are): if the kick **reaches the goal line (distance ≥ yards to goal)** it's a **made field goal** — **fanfare**, 3 points; if it falls short it's a **punt** — **two whistles**. There is **no missed-FG state**, and from beyond 65 out a kick is always a punt. On 4th down you may instead run; failing is a **turnover on downs** — **two whistles**. *Two whistles always mean: drive over, no points.*
 
 **Drive endings (solo restart rule).** With no opponent offense, every drive ends the same way: **the next drive starts 1st & 10 at your own 20** —
 
 | Drive ends by | Points | Sound | Next drive |
 |---|---|---|---|
-| Touchdown | +7 | charge | own 20 |
-| Made field goal | +3 | charge | own 20 |
+| Touchdown | +7 | fanfare | own 20 |
+| Made field goal | +3 | fanfare | own 20 |
 | Punt | 0 | two whistles | own 20 |
 | Turnover on downs | 0 | two whistles | own 20 |
 
-*Design note:* the manual itself restarts the receiving team **at its own 20 after a field goal** ("the other team takes possession of the ball on its own 20 yard line," p. 3) — the flat restart just extends that rule to every drive end. Restarting at the dead-ball spot would make 4th-down failure free, and mirroring field position would make going-for-it strictly beat punting by exactly the punt distance. The flat own-20 restart keeps the real 4th-down decision — in FG range, kick for a likely 3 vs go for 7 — and prices a dead drive in the currency that matters here: **clock**.
+*Design note:* the manual itself restarts the receiving team **at its own 20 after a field goal** (p. 3) — the flat restart just extends that rule to every drive end. Restarting at the dead-ball spot would make 4th-down failure free, and mirroring field position would make going-for-it strictly beat punting by exactly the punt distance. The flat own-20 restart keeps the real 4th-down decision — in FG range, kick for a likely 3 vs go for 7 — and prices a dead drive in the currency that matters here: **clock**.
 
-**Status readout (ST key).** Shows **DOWN — FIELD POSITION — YARDS TO GO** on the LED digits, and readies the field for the next play. The field-position window draws the 50-yard line as a small vertical **tack mark** and puts the number on the ball's side of it *(authentic display — manual p. 2)*: your own 35 reads **`35⊣`**, the opponent's 35 reads **`⊢35`** (so `2 · 35⊣ · 6` = 2nd down, your own 35, 6 to go); at exactly the 50, no marker — our default, the manual doesn't cover it. Rendered as LED segments, not text. **Goal-to-go rule:** inside 10 yards of the goal, the yards-to-go box shows **nothing** (manual: "less than ten yards to go to a TOUCHDOWN").
+**Status readout (ST key).** Shows **DOWN — FIELD POSITION — YARDS TO GO** on the LED digits, and readies the field for the next play. The field-position window draws the 50-yard line as a small vertical **tack mark** and puts the number on the ball's side of it *(authentic display — manual p. 2)*: your own 40 reads **`40⊣`**, the opponent's 40 reads **`⊢40`** (so `3 · 42⊣ · 4` = 3rd down, your own 42, 4 to go); at exactly the 50, no marker — our default, the manual doesn't cover it. Rendered as LED segments, not text. **Goal-to-go rule:** under 10 yards from the goal line, the yards-to-go box shows **nothing** (the manual keys this to distance-to-touchdown, not to the first-down marker — p. 2).
 
 **Score readout (SC key).** Shows **YOUR score — TIME REMAINING — 0**, and also readies the field for the next play. *You must press ST or SC after each play to set up the next one.*
 
-**Clock.** Four 15-minute quarters, but fast: a quarter lasts **~2½ real minutes** (~10-minute game) — the clock drops 0.1 game-minute per real second and **only ticks during a play**. It counts in **decimals** (7½ reads `7.5`) and shows `0.0` at quarter's end (the manual's `0:0`, rendered decimal for display consistency), then resets to 15 on the next play. If the clock hits zero mid-play, the play runs to completion — the quarter (or in Q4, the game) ends when the play resolves. Quarter transitions (manual p. 4): into Q2 and Q4, **field position, down, and yards to go carry over** the break ("same as at end of 1st quarter"); at halftime, **Q3 opens on a fresh 1st & 10 at your own 20** — the solo stand-in for the manual's second-half possession change. You start the game 1st & 10 on your own 20; press ST to roll into each new quarter. Game ends when the clock expires in the 4th.
+**Clock.** Four 15-minute quarters, but fast: a quarter lasts **~2½ real minutes** (~10-minute game) — the clock drops 0.1 game-minute per real second and **only ticks during a play**. It counts in **decimals** (7½ reads `7.5`) and shows `0.0` at quarter's end (the manual's `0:0`, rendered decimal for display consistency), then resets to 15 on the next play. If the clock hits zero mid-play, the play runs to completion — the quarter (or in Q4, the game) ends when the play resolves. Quarter transitions (manual p. 4): into Q2 and Q4, **field position, down, and yards to go carry over** the break; at halftime, **Q3 opens on a fresh 1st & 10 at your own 20** — the solo stand-in for the manual's second-half possession change. You start the game 1st & 10 on your own 20; press ST to roll into each new quarter. Game ends when the clock expires in the 4th.
 
 **Skill switch — OFF / PRO 1 / PRO 2.** PRO 1 = normal defense speed; **PRO 2 = defense reacts 50% faster**. Switching between PRO 1 and PRO 2 mid-game **ends the game**. New game = switch **OFF, then back**. The on-screen slide switch is always live, like the physical flip. **Keyboard 0 (OFF) works at any time** — it's the deliberate keyboard abort: press 0, then 1 or 2, for a fresh game without touching the pointer (0 sits isolated at the far right of the number row; accident risk is negligible). **Keyboard 1/2 work only between games** — on QWERTY they sit directly above W, and a stray reach for W must never flip PRO levels mid-drive.
 
-**Defensive AI.** Five tacklers home in on the runner but move unpredictably — "you never know when or where a tackler will move." Classic play: draw the defense to one sideline, then cut back — watch the deep "safety man."
+**Defensive AI.** Five tacklers home in on the runner but move unpredictably — the manual's whole pitch (p. 6) is that you can never be sure when or where the next tackler will shift. Classic play: draw the defense to one sideline, then cut back — and watch the deep safety.
 
 ---
 
-## 3. VogelTronics reskin
+## 3. VogelTronics identity (original industrial design)
 
-Keep the Mattel unit's silhouette and interaction; swap the identity.
+Keep the *interaction grammar* of a 1977 LED football handheld; give it a **wholly original VogelTronics body**. This is period practice, not evasion: Coleco, Entex, and the rest all shipped their own LED football units — different cases, colors, and button layouts, same game. Do **not** replicate any real unit's silhouette, speaker grille, faceplate layout, or graphics — trade-dress distance is part of the design brief. Era-authentic materials, original shape.
 
 - **Model:** GRIDIRON badge on the faceplate, plus a small "NO. 2100 · 1977" plate (catalog number per the VogelTronics history canon — it's on the box art).
 - **Maker mark:** VogelTronics vector logo (reuse the repo's SVG), "Games That Think!" tagline, "Elk Grove Village, ILL." molded line.
@@ -80,7 +80,7 @@ Keep the Mattel unit's silhouette and interaction; swap the identity.
 | Mute | **M** | speaker toggle |
 | Blip style (dash / round) | **B** | small faceplate toggle |
 
-On-screen keys must be **truly pressable**: commands fire on `pointerdown` (not `click`), with depress states, `:active` animation, and highlight-sync when the matching physical key is pressed. Every button **blurs after `pointerup`** — so Space can never re-trigger the last-clicked key — and controls get `touch-action: manipulation` (no double-tap zoom). **Tab is deliberately unbound**; it stays reserved for keyboard focus navigation. On mobile the on-screen keys are the primary input (thumb-sized), laid out like the real unit. Remember: **one yard per discrete press**, and the **first direction press of a play starts the clock and the rush**. Ignore OS key auto-repeat (`event.repeat`) — one yard requires one physical press; holding a key must never auto-run. **A** is intentionally unbound: the 1977 game has no backward running (Gridiron 2 will claim it).
+On-screen keys must be **truly pressable**: commands fire on `pointerdown` (not `click`), with depress states, `:active` animation, and highlight-sync when the matching physical key is pressed. Every button **blurs after `pointerup`** — so Space can never re-trigger the last-clicked key — and controls get `touch-action: manipulation` (no double-tap zoom). **Tab is deliberately unbound**; it stays reserved for keyboard focus navigation. On mobile the on-screen keys are the primary input (thumb-sized), laid out like the on-screen cabinet. Remember: **one yard per discrete press**, and the **first direction press of a play starts the clock and the rush**. Ignore OS key auto-repeat (`event.repeat`) — one yard requires one physical press; holding a key must never auto-run. **A** is intentionally unbound: the 1977 game has no backward running (Gridiron 2 will claim it).
 
 ---
 
@@ -99,7 +99,7 @@ On-screen keys must be **truly pressable**: commands fire on `pointerdown` (not 
 - `render/led.ts` — pure fn `Blip[] → 3×9 lit grid` (`off | dim | bright | blink`). The engine emits a display-agnostic blip list (`{row, col, intensity, blink}`); the renderer never knows which blip is the runner — Gridiron 2's ball and receivers will render here unchanged.
 - `render/status.ts` — the numeric ST readout (`DOWN | POS◄▶ | TO-GO`, goal-to-go blank) and SC readout (`SCORE | TIME | 0`) as LED digits.
 - `render/cabinet.ts` — SVG faceplate: bezel, LED window, GRIDIRON/VogelTronics badges, ST/SC/K keys, arrow keys, OFF/PRO1/PRO2 slide switch.
-- `audio/sound.ts` — `AudioContext` wrapper: `step()`, `whistle()` (tackle, single), `doubleWhistle()` (punt / turnover on downs), `charge()` (any score / made FG), `kick()`. Oscillators + gain envelopes only, **no audio files**. Lazily unlock on first gesture; honor mute.
+- `audio/sound.ts` — `AudioContext` wrapper: `step()`, `whistle()` (tackle, single), `doubleWhistle()` (punt / turnover on downs), `fanfare()` (any score / made FG — an **original** bugle-style riff, *never* the stadium "Charge!" melody), `kick()`. Oscillators + gain envelopes only, **no audio files**. Lazily unlock on first gesture; honor mute.
 - `input/keyboard.ts` + `input/buttons.ts` — normalize into the command enum; buttons fire on `pointerdown` and blur on `pointerup`.
 - `styles.css` — skin custom properties; honor `prefers-reduced-motion` (blink substitute — see Tackling); `touch-action: manipulation` on controls.
 
@@ -140,7 +140,7 @@ gridiron/
 
 ## 7. Scope
 
-**v1 = the whole game:** power switch (OFF/PRO1/PRO2), solo running plays on the 3×9 grid with 5 tacklers, tackler-blink, one-yard discrete movement, downs/yards/first downs, TD + 4th-down kick (single 1–65 roll: FG if it reaches the goal, else punt) + turnover-on-downs with the flat own-20 restart, ST/SC readouts with the goal-to-go rule and authentic ⊣/⊢ tack marker, fast decimal clock over 4 quarters with carryover + halftime reset, authentic whistle/charge sounds, pressable keys + WASD, dash-vs-round-blip display toggle, seeded RNG, VogelTronics skin, Netlify deploy.
+**v1 = the whole game:** power switch (OFF/PRO1/PRO2), solo running plays on the 3×9 grid with 5 tacklers, tackler-blink, one-yard discrete movement, downs/yards/first downs, TD + 4th-down kick (single 1–65 roll: FG if it reaches the goal, else punt) + turnover-on-downs with the flat own-20 restart, ST/SC readouts with the goal-to-go rule and authentic ⊣/⊢ tack marker, fast decimal clock over 4 quarters with carryover + halftime reset, authentic whistles + an original scoring fanfare, pressable keys + WASD, dash-vs-round-blip display toggle, seeded RNG, VogelTronics skin, Netlify deploy.
 
 **Nice-to-haves:** CRT/LED bloom toggle, in-session high score, box-art splash, mute/reduced-motion state encoded in the URL (no localStorage).
 
@@ -154,10 +154,12 @@ gridiron/
 
 ```text
 You are an expert TypeScript game developer. Build a complete, deployable
-browser game: GRIDIRON — a faithful, SOLO recreation of the 1977 Mattel
-Electronics Football handheld (running game only), reskinned for the fictional
-company VogelTronics (tagline "Games That Think!", Elk Grove Village, Illinois,
-1977). Affectionate parody only — invent no real trademarks. This is a
+browser game: GRIDIRON — a faithful SOLO recreation of the GAMEPLAY of the
+1977 Mattel Electronics Football handheld (running game only), delivered as an
+original product of the fictional company VogelTronics (tagline "Games That
+Think!", Elk Grove Village, Illinois, 1977). Affectionate parody only — invent
+no real trademarks, quote no real product's text or music, and copy no real
+product's appearance. This is a
 standalone game; a future SEPARATE project ("Gridiron 2") will reuse this
 engine and add passing, so keep engine code framework-free and free of
 running-only assumptions that would block a later passing state — but do NOT
@@ -198,8 +200,8 @@ SOLO PLAY
   reset (see CLOCK). The scoreboard's VISITOR window stays 0.
 
 MOVEMENT & PLAY FLOW
-- Pre-snap: the runner (bright) lines up in column 0, middle row ("in front
-  of his goal posts"). The defense lines up SEMI-RANDOMLY each play (seeded
+- Pre-snap: the runner (bright) lines up in column 0, middle row, at his own
+  end of the field. The defense lines up SEMI-RANDOMLY each play (seeded
   RNG): 5 defenders in distinct cells across columns 2-8, always at least one
   deep man in columns 6-8 (the "safety"), never in columns 0-1. One blip per
   cell — defenders never overlap.
@@ -214,11 +216,11 @@ MOVEMENT & PLAY FLOW
 
 RULES & SCORING
 - 4 downs to gain 10 yards for a first down. Touchdown = 7, Field goal = 3.
-  Every score plays a "CHARGE" sound.
+  Every score plays the SCORING FANFARE (see SOUND).
 - KICK (K key, 4th down ONLY; pressing K on downs 1-3 does nothing): the kick
   travels 1-65 yards (uniform, seeded RNG), and that single roll IS the
   punt-vs-FG decision: if the kick reaches the goal line (distance >= yards
-  to goal) it is a MADE FIELD GOAL — charge sound, 3 points; if it falls
+  to goal) it is a MADE FIELD GOAL — fanfare, 3 points; if it falls
   short it is a PUNT — two whistles. There is NO separate missed-FG state;
   "closer = likelier FG" emerges naturally, and from beyond 65 yards out a
   kick is always a punt. Running on 4th and failing = TURNOVER ON DOWNS:
@@ -236,7 +238,7 @@ READOUTS (rendered as LED digits)
 - ST (Status): show DOWN | FIELD POSITION | YARDS TO GO, and ready the field for
   the next play. The field-position window draws the 50-yard line as a small
   vertical tack mark and puts the number on the ball's side of it (authentic
-  1977 display): your own 35 reads 35⊣, the opponent's 35 reads ⊢35; at
+  1977 display): your own 40 reads 40⊣, the opponent's 40 reads ⊢40; at
   exactly the 50, no marker. Render the tack as LED segments, not text.
   GOAL-TO-GO RULE: inside 10 yards of the goal, the yards-to-go box shows
   nothing.
@@ -284,15 +286,22 @@ CONTROLS (keyboard AND pressable on-screen keys -> one command enum)
   matching key is pressed. Every button BLURS after pointerup — Space must
   never re-trigger the last-clicked button — and controls use touch-action:
   manipulation (no double-tap zoom). On mobile the on-screen keys are primary
-  input (thumb-sized), laid out like the real unit: arrow keys on the right,
+  input (thumb-sized), laid out like the cabinet: arrow keys on the right,
   ST/SC/K keys, and the slide switch.
 
 SOUND (Web Audio, oscillators only, NO audio files)
 - step (per move), single whistle (tackle), double whistle (punt / turnover
-  on downs), charge (any score or made FG), kick. Lazily unlock the
-  AudioContext on first user gesture; honor a mute toggle.
+  on downs), scoring fanfare (any score or made FG), kick. The fanfare must be
+  an ORIGINAL 5-7 note bugle-style riff — ballpark energy WITHOUT quoting the
+  stadium "Charge!" melody (it carries a real composition claim) or any other
+  real tune. Lazily unlock the AudioContext on first user gesture; honor a
+  mute toggle.
 
-LOOK (VogelTronics reskin, period-authentic 1977)
+LOOK (VogelTronics original design, period-authentic 1977)
+- Design an ORIGINAL cabinet: evoke the 1977 LED-handheld era the way Coleco
+  and Entex did with their own football units — same game, own body. Do NOT
+  replicate any real unit's casing, silhouette, speaker grille, or faceplate
+  layout.
 - Render the handheld cabinet as SVG: charcoal/woodgrain bezel, deep-maroon LED
   window, red LEDs (#ff2a1a bright / #5a0d08 dim / blink), cream/orange keycaps.
 - Badges: "GRIDIRON", "NO. 2100 - 1977", a VogelTronics vector logo, "Games
@@ -348,7 +357,7 @@ assumptions.
 
 ---
 
-*Fidelity sourced from the original 1977 Mattel Electronics Football instruction manual (`docs/Mattel-Football.pdf` — kept local and gitignored, not redistributed), cross-checked against the Handheld Games Museum. Adapted to solo play at the designer's direction; passing deferred to the separate Gridiron 2 project. The solo restart rule (own-20, extending the manual's post-FG rule), the single-roll kick model (the simplest mechanism consistent with the manual's kick description), the per-play defensive scatter (the manual fixes no formation), the halftime reset, and web-platform adaptations (T instead of Tab, between-games skill keys, pointerdown/blur behavior, reduced-motion blink substitute, seeded RNG) are deliberate design decisions, documented in §2, §4, and §5.*
+*Fidelity sourced from the original 1977 Mattel Electronics Football instruction manual (`docs/Mattel-Football.pdf` — kept local and gitignored, not redistributed), cross-checked against the Handheld Games Museum. Adapted to solo play at the designer's direction; passing deferred to the separate Gridiron 2 project. The solo restart rule (own-20, extending the manual's post-FG rule), the single-roll kick model (the simplest mechanism consistent with the manual's kick description), the per-play defensive scatter (the manual fixes no formation), the halftime reset, the original cabinet design and scoring fanfare (era-evoking; nothing copied from any real unit's trade dress, and no quotation of the "Charge!" melody), and web-platform adaptations (T instead of Tab, between-games skill keys, pointerdown/blur behavior, reduced-motion blink substitute, seeded RNG) are deliberate design decisions, documented in §2, §4, and §5.*
 
 ---
 
