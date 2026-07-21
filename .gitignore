@@ -1,0 +1,15 @@
+# Node / Vite
+node_modules/
+dist/
+.env
+.env.*
+npm-debug.log*
+*.log
+logs/
+
+# macOS
+.DS_Store
+
+# Local reference only — Mattel's scanned 1977 manual is consulted for
+# gameplay rules but not redistributed in this repo
+docs/Mattel-Football.pdf
