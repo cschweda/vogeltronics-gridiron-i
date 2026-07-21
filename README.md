@@ -33,7 +33,7 @@ The game will be **100% playable from the keyboard** — the on-screen keys mirr
 
 ## Planned stack
 
-Vite + TypeScript (vanilla, no framework) · SVG cabinet + LED field · Web Audio oscillators (no audio files) · seeded RNG · Vitest · Netlify static deploy.
+Vite + TypeScript (vanilla, no framework) · SVG cabinet + LED field · Web Audio oscillators (no audio files) · seeded RNG · Vitest · Netlify static deploy · a downloadable period **Owner's Manual** (PDF), played completely straight.
 
 ## Repo assets
 

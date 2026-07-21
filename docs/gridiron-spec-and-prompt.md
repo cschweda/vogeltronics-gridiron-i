@@ -63,6 +63,10 @@ Keep the *interaction grammar* of a 1977 LED football handheld; give it a **whol
 - **Type:** no external fonts (matches the repo rule) — system monospace + inline SVG logo. Subtle LED bloom via `box-shadow`/`filter`.
 - **Copy voice:** affectionate-parody enthusiasm ("The pocket gridiron that thinks two plays ahead!"). Invent no real trademarks.
 
+**House voice — the Kaufman rule.** Every VogelTronics artifact is produced as if the company were real, with total deadpan commitment: period-correct copy, catalog numbers, legalese, service addresses, cross-sells of other fictional products. No winking *inside* any artifact — no anachronisms, no jokes that break the frame. The only permitted frame-breaks are smallest-type fine print (back page of print artifacts) and the site/README disclaimers. The target effect is Andy Kaufman: *"wait — this is fictional, right?"* Total commitment is what produces it.
+
+**The Owner's Manual (house artifact — the template for every VogelTronics game).** Gridiron ships with a period-authentic instruction booklet as a **downloadable PDF** (`public/gridiron-manual.pdf`, linked as "OWNER'S MANUAL (PDF)" from the game page footer and from the README). The manual documents the *fictional 1977 product* — No. 2100, **2 players**, 9-volt battery — played completely straight, as if preserved from 1977; the web page, not the manual, is where the solo adaptation is explained. House section grammar (reused by every game in the catalog; eventually extracted to `vogeltronics-history` alongside the other brand tooling): **cover** (product art · "INSTRUCTIONS" · model no.) → **battery/setup** → **control keys** → **reading the display** (LED diagrams) → **how to play** → **strategy tips** → **care of your game** → the fictional **VogelTronics 90-Day Limited Warranty** (Elk Grove Village service address) → **back cover** with a catalog cross-sell of other fictional VogelTronics products and one line of smallest-type fine print breaking character ("VogelTronics is a fictional company; this booklet is an original work of homage"). **Original text and layout only** — evoke the late-70s handheld-manual *genre* (numbered sections, imperative voice, hand-diagram aesthetics); lift no sentences, diagrams, or layouts from any real manual. Production: HTML/CSS print source in `tools/manual/`, digest-size pages (5.5″ × 8.5″), rendered via headless Chrome print-to-PDF and **committed** as a static asset (the Netlify build never needs Chrome). Gameplay passages must agree with `engine/rules.ts` — plus the 2-player passages the fiction requires.
+
 ---
 
 ## 4. Controls (keyboard + pressable on-screen keys → one command enum)
@@ -125,7 +129,8 @@ gridiron/
 ├─ vite.config.ts
 ├─ tsconfig.json
 ├─ package.json
-├─ public/            # favicon, og image, vogeltronics-logo.svg
+├─ public/            # favicon, og image, vogeltronics-logo.svg, gridiron-manual.pdf
+├─ tools/             # make-og-image.py · manual/ (HTML→PDF source for the Owner's Manual)
 └─ src/
    ├─ main.ts
    ├─ styles.css
@@ -140,7 +145,7 @@ gridiron/
 
 ## 7. Scope
 
-**v1 = the whole game:** power switch (OFF/PRO1/PRO2), solo running plays on the 3×9 grid with 5 tacklers, tackler-blink, one-yard discrete movement, downs/yards/first downs, TD + 4th-down kick (single 1–65 roll: FG if it reaches the goal, else punt) + turnover-on-downs with the flat own-20 restart, ST/SC readouts with the goal-to-go rule and authentic ⊣/⊢ tack marker, fast decimal clock over 4 quarters with carryover + halftime reset, authentic whistles + an original scoring fanfare, pressable keys + WASD, dash-vs-round-blip display toggle, seeded RNG, VogelTronics skin, Netlify deploy.
+**v1 = the whole game:** power switch (OFF/PRO1/PRO2), solo running plays on the 3×9 grid with 5 tacklers, tackler-blink, one-yard discrete movement, downs/yards/first downs, TD + 4th-down kick (single 1–65 roll: FG if it reaches the goal, else punt) + turnover-on-downs with the flat own-20 restart, ST/SC readouts with the goal-to-go rule and authentic ⊣/⊢ tack marker, fast decimal clock over 4 quarters with carryover + halftime reset, authentic whistles + an original scoring fanfare, pressable keys + WASD, dash-vs-round-blip display toggle, seeded RNG, the downloadable period Owner's Manual (PDF), VogelTronics skin, Netlify deploy.
 
 **Nice-to-haves:** CRT/LED bloom toggle, in-session high score, box-art splash, mute/reduced-motion state encoded in the URL (no localStorage).
 
@@ -311,6 +316,33 @@ LOOK (VogelTronics original design, period-authentic 1977)
   the tackler blink with a steady-bright tackler (all others stay dim) and drop
   nonessential animation — the tackle information must survive without
   flashing.
+
+OWNER'S MANUAL (required deliverable — the VogelTronics house artifact)
+- Ship a period-authentic VogelTronics instruction booklet as a downloadable
+  PDF: public/gridiron-manual.pdf, linked from the game page footer as
+  "OWNER'S MANUAL (PDF)" and from the README.
+- The manual documents the FICTIONAL 1977 PRODUCT (No. 2100, 2 players,
+  9-volt battery) played completely straight, as if preserved from 1977. The
+  web page, not the manual, explains the solo adaptation.
+- House section grammar (this is the template every VogelTronics game will
+  reuse): cover (product art, "INSTRUCTIONS", model no.) -> battery/setup ->
+  control keys -> reading the display (LED diagrams) -> how to play ->
+  strategy tips -> care of your game -> VogelTronics 90-Day Limited Warranty
+  (fictional terms, Elk Grove Village service address) -> back cover with a
+  catalog cross-sell of other fictional VogelTronics products and ONE line of
+  smallest-type fine print breaking character: "VogelTronics is a fictional
+  company; this booklet is an original work of homage."
+- DEADPAN RULE: the manual never winks. Period-correct prose, legalese,
+  catalog numbers, addresses — total commitment, no anachronisms, no jokes
+  that break the frame. The uncanny feeling comes from playing it straight.
+- ORIGINAL TEXT ONLY: evoke the late-70s handheld-manual genre (numbered
+  sections, imperative voice, hand-diagram aesthetics) but lift no sentences,
+  diagrams, or layouts from any real manual.
+- Production: HTML/CSS print source in tools/manual/, digest-size pages
+  (5.5in x 8.5in), rendered with headless Chrome print-to-PDF by a small
+  script; COMMIT the PDF as a static asset (the Netlify build never needs
+  Chrome). Gameplay passages must agree with engine/rules.ts, plus the
+  2-player passages the fiction requires.
 
 ARCHITECTURE
 - engine/: state.ts (single GameState + explicit state machine: POWER_OFF,
