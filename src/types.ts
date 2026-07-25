@@ -69,6 +69,8 @@ export type BlipStyle = 'dash' | 'round';
  */
 export type ZoomLevel = 1 | 2 | 3;
 export const ZOOM_LEVELS: readonly ZoomLevel[] = [1, 2, 3];
+export const MIN_ZOOM: ZoomLevel = 1;
+export const MAX_ZOOM: ZoomLevel = 3;
 
 /* ---- machine ------------------------------------------------------------ */
 
@@ -98,7 +100,11 @@ export type Command =
   | 'skill-pro2'
   | 'mute'
   | 'blip-style'
-  | 'zoom';
+  /** Cycles, and wraps — the Z key and the on-screen control. */
+  | 'zoom'
+  /** Steps and clamps — the mouse wheel, where wrapping would be perverse. */
+  | 'zoom-in'
+  | 'zoom-out';
 
 /** What the display is currently showing in the numeric windows. */
 export type Readout = 'status' | 'score';

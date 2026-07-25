@@ -17,7 +17,7 @@ import type {
   Skill,
   ZoomLevel,
 } from '../types';
-import { FIELD_COLS, FIELD_LENGTH, FIELD_ROWS } from '../types';
+import { FIELD_COLS, FIELD_LENGTH, FIELD_ROWS, MAX_ZOOM, MIN_ZOOM } from '../types';
 import type { Cell } from './defenders';
 import { defenderIntervalMs, findTackler, scatterDefenders, stepDefenders } from './defenders';
 import type { Rng } from './rng';
@@ -312,8 +312,17 @@ function handleCommand(state: GameState, command: Command, rng: Rng): ReduceResu
     return { state: { ...state, muted: !state.muted }, events: [] };
   }
 
+  // The keyed control cycles; the wheel steps and stops at the ends. Wrapping
+  // from 3x back to 1x on a wheel notch would feel like a glitch.
   if (command === 'zoom') {
-    const next = ((state.zoom % 3) + 1) as ZoomLevel;
+    const next = ((state.zoom % MAX_ZOOM) + 1) as ZoomLevel;
+    return { state: { ...state, zoom: next }, events: [] };
+  }
+
+  if (command === 'zoom-in' || command === 'zoom-out') {
+    const delta = command === 'zoom-in' ? 1 : -1;
+    const next = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, state.zoom + delta)) as ZoomLevel;
+    if (next === state.zoom) return { state, events: [] };
     return { state: { ...state, zoom: next }, events: [] };
   }
 

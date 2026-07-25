@@ -20,6 +20,7 @@ import {
 import { Sound } from './audio/sound';
 import { bindButtons } from './input/buttons';
 import { bindKeyboard } from './input/keyboard';
+import { bindWheelZoom } from './input/wheel';
 import {
   buildCabinet,
   flashKey,
@@ -150,6 +151,7 @@ bindKeyboard({
   isBetweenGames: () => state.phase === 'POWER_OFF' || state.phase === 'GAME_OVER',
 });
 bindButtons(cabinet, { onCommand });
+bindWheelZoom(cabinet.root, { onCommand, getZoom: () => state.zoom });
 
 const loop = createLoop(TICK_MS, (deltaMs) => apply({ type: 'tick', deltaMs }));
 

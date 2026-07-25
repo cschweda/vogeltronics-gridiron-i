@@ -361,6 +361,44 @@ describe('display zoom', () => {
     expect(g.state.zoom).toBe(1);
   });
 
+  test('zoom-in steps up and stops at the top instead of wrapping', () => {
+    const g = game();
+    g.powerOn();
+    g.press('zoom-in');
+    expect(g.state.zoom).toBe(2);
+    g.press('zoom-in');
+    expect(g.state.zoom).toBe(3);
+    // A wheel notch at the top must not drop back to 1x.
+    g.press('zoom-in');
+    expect(g.state.zoom).toBe(3);
+  });
+
+  test('zoom-out steps down and stops at the bottom', () => {
+    const g = game();
+    g.powerOn();
+    g.press('zoom-in');
+    g.press('zoom-in');
+    expect(g.state.zoom).toBe(3);
+    g.press('zoom-out');
+    expect(g.state.zoom).toBe(2);
+    g.press('zoom-out');
+    expect(g.state.zoom).toBe(1);
+    g.press('zoom-out');
+    expect(g.state.zoom).toBe(1);
+  });
+
+  test('a wheel step after the whistle does not continue the game', () => {
+    const g = game(11);
+    g.powerOn();
+    for (let i = 0; i < 400 && g.state.phase !== 'TACKLED'; i++) {
+      g.press('forward');
+      g.tick(200);
+    }
+    expect(g.state.phase).toBe('TACKLED');
+    g.press('zoom-in');
+    expect(g.state.phase).toBe('TACKLED');
+  });
+
   test('survives a power cycle, like the other display preferences', () => {
     const g = game();
     g.powerOn();
