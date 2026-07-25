@@ -130,7 +130,7 @@ gridiron/
 ├─ tsconfig.json
 ├─ package.json
 ├─ public/            # favicon, og image, vogeltronics-logo.svg, gridiron-manual.pdf
-├─ tools/             # make-og-image.py · manual/ (HTML→PDF source for the Owner's Manual)
+├─ tools/             # manual/ (HTML→PDF source for the Owner's Manual)
 └─ src/
    ├─ main.ts
    ├─ styles.css
@@ -184,7 +184,7 @@ STACK & DELIVERY
 
 EXISTING REPO — DO NOT CLOBBER (read before writing anything)
 - This repo is NOT empty. It already contains a README.md, LICENSE,
-  .gitignore, docs/, and tools/make-og-image.py. Read each before touching it.
+  .gitignore, and docs/. Read each before touching it.
 - .gitignore: EXTEND IT, never regenerate it. It carries a required line —
   `docs/Mattel-Football.pdf` — that keeps the scanned 1977 Mattel manual out of
   version control. That file is present locally and must stay untracked;
@@ -202,9 +202,12 @@ EXISTING REPO — DO NOT CLOBBER (read before writing anything)
   The cabinet's VogelTronics maker mark must inline/reference that existing
   logo SVG — do NOT draw a new wordmark. Wire og-image.png into index.html as
   the og:image meta tag. Generate only the favicon.
-- tools/make-og-image.py already exists and is shared across the whole
-  VogelTronics catalog. Do not modify or move it. Add the manual's print
-  source alongside it at tools/manual/.
+- The og:image generator does NOT live here. `make-og-image.py` is shared
+  brand tooling for the whole catalog and its single home is the
+  vogeltronics-history repo, alongside gen_badge.py and gen_gridiron_boxart.py
+  (which already generates this game's box art). Do not copy it in — the
+  committed og-image.png is all this repo needs. Add only the manual's print
+  source, at tools/manual/.
 - The README must end with a DISCLAIMER: Gridiron is an original, independent
   homage, not affiliated with or endorsed by Mattel; no trademarks, logos, art,
   assets, or code from the original product are used; all VogelTronics/Gridiron
