@@ -10,7 +10,7 @@
  * real focusable buttons. That matters — the spec reserves Tab for focus
  * navigation, which only means anything if the controls are properly focusable.
  */
-import type { BlipStyle, Command, FieldMarker, Readout, Skill } from '../types';
+import type { BlipStyle, Command, FieldMarker, Readout, Skill, ZoomLevel } from '../types';
 import { FIELD_COLS, FIELD_ROWS } from '../types';
 import type { LedCell } from './led';
 import type { ReadoutWindows } from './status';
@@ -252,6 +252,7 @@ export interface CabinetHandles {
   switchButtons: Map<Skill, HTMLButtonElement>;
   muteButton: HTMLButtonElement;
   blipButton: HTMLButtonElement;
+  zoomButton: HTMLButtonElement;
   announcer: HTMLElement;
   /** The three window labels under the display. */
   legendCells: HTMLElement[];
@@ -284,14 +285,16 @@ export function buildCabinet(mount: HTMLElement): CabinetHandles {
   /* the display */
   const bezel = document.createElement('div');
   bezel.className = 'bezel';
-  const display = buildDisplay();
-  bezel.appendChild(display.svg);
 
   /*
    * The 1977 cabinet had these silkscreened on, so they never changed — which
    * means the same three windows read as DOWN/POSITION/TO-GO whether you had
    * pressed ST or SC. On a screen we can do better: the legend follows the
    * readout, so a number is never ambiguous.
+   *
+   * It sits ABOVE the window, directly over the digits it names. Below, the
+   * whole nine-yard blip field came between a label and its number, which is
+   * a long way to ask an eye to travel to pair two things up.
    */
   const legend = document.createElement('div');
   legend.className = 'window-legend';
@@ -302,6 +305,9 @@ export function buildCabinet(mount: HTMLElement): CabinetHandles {
     legend.appendChild(span);
   }
   bezel.appendChild(legend);
+
+  const display = buildDisplay();
+  bezel.appendChild(display.svg);
   root.appendChild(bezel);
 
   /* model badge band */
@@ -368,8 +374,12 @@ export function buildCabinet(mount: HTMLElement): CabinetHandles {
   muteButton.setAttribute('aria-pressed', 'false');
   const blipButton = button('toggle', '●', 'Blip style, round or dash (B)');
   blipButton.setAttribute('aria-pressed', 'false');
+  // Not a pressed/unpressed toggle — it steps through sizes, so it reports the
+  // level rather than claiming an on/off state it does not have.
+  const zoomButton = button('toggle toggle-zoom', '1x', 'Display size, 1x. Press to enlarge (Z)');
   toggles.appendChild(muteButton);
   toggles.appendChild(blipButton);
+  toggles.appendChild(zoomButton);
   switchRow.appendChild(toggles);
 
   root.appendChild(switchRow);
@@ -396,6 +406,7 @@ export function buildCabinet(mount: HTMLElement): CabinetHandles {
     switchButtons,
     muteButton,
     blipButton,
+    zoomButton,
     announcer,
     legendCells,
   };
@@ -424,7 +435,7 @@ export function paintLegend(
     ? ['', '', '']
     : readout === 'score'
       ? ['YOUR SCORE', 'TIME LEFT', 'VISITOR']
-      : ['DOWN', `FIELD POSITION · ${half}`, goalToGo ? 'GOAL TO GO' : 'TO GO'];
+      : ['DOWN', `POSITION · ${half}`, goalToGo ? 'GOAL TO GO' : 'TO GO'];
 
   handles.legendCells.forEach((cell, i) => {
     const text = labels[i] ?? '';
@@ -483,6 +494,7 @@ export function paintControls(
   skill: Skill,
   muted: boolean,
   blipStyle: BlipStyle,
+  zoom: ZoomLevel = 1,
 ): void {
   for (const [pos, b] of handles.switchButtons) {
     b.setAttribute('aria-pressed', String(pos === skill));
@@ -495,6 +507,9 @@ export function paintControls(
     soundOn ? 'Sound on. Turn sound off (M)' : 'Sound off. Turn sound on (M)',
   );
   handles.blipButton.setAttribute('aria-pressed', String(blipStyle === 'dash'));
+  handles.zoomButton.textContent = `${zoom}x`;
+  handles.zoomButton.setAttribute('aria-label', `Display size, ${zoom}x. Press to enlarge (Z)`);
+  handles.root.dataset['zoom'] = String(zoom);
   handles.blipButton.textContent = blipStyle === 'dash' ? '▬' : '●';
 }
 

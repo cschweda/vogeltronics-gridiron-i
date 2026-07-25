@@ -4,6 +4,8 @@ import {
   DEEP_MIN_COL,
   SCATTER_MAX_COL,
   SCATTER_MIN_COL,
+  SNAP_CLEAR_COL,
+  SNAP_ROW,
   defenderIntervalMs,
   findTackler,
   scatterDefenders,
@@ -47,6 +49,22 @@ describe('pre-snap scatter', () => {
     for (const seed of seeds) {
       const cells = scatterDefenders(makeRng(seed)).map((d) => `${d.row},${d.col}`);
       expect(new Set(cells).size).toBe(DEFENDER_COUNT);
+    }
+  });
+
+  test('never puts a tackler on the runner\u2019s first stride', () => {
+    // A tackler at the snap cell is two presses from a runner starting at
+    // column 0 — the play would be over before the defense moved once.
+    for (const seed of seeds) {
+      for (const d of scatterDefenders(makeRng(seed))) {
+        expect(d.row === SNAP_ROW && d.col === SNAP_CLEAR_COL).toBe(false);
+      }
+    }
+  });
+
+  test('still fields five tacklers despite the reserved cell', () => {
+    for (const seed of seeds) {
+      expect(scatterDefenders(makeRng(seed))).toHaveLength(DEFENDER_COUNT);
     }
   });
 

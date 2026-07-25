@@ -63,4 +63,5 @@ export function bindButtons(handles: CabinetHandles, options: ButtonOptions): vo
 
   wire(handles.muteButton, () => options.onCommand('mute'));
   wire(handles.blipButton, () => options.onCommand('blip-style'));
+  wire(handles.zoomButton, () => options.onCommand('zoom'));
 }

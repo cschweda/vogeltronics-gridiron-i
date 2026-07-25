@@ -64,6 +64,19 @@ body {
   min-height: 100vh;
 }
 
+/*
+ * The cabinet sizes itself with min(…, 100%), so its parent needs a definite
+ * width. Without this, `100%` resolved against a shrink-to-fit box that was
+ * itself sized by the cabinet — circular, so it collapsed to max-content and
+ * pinned the cabinet at ~364px no matter what. Zoom looked like it did
+ * nothing; in fact the cabinet had never reached its intended 30rem either.
+ */
+#game {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -112,6 +125,20 @@ body {
 }
 
 /* ---- the cabinet --------------------------------------------------------- */
+
+/*
+ * Display zoom. Playing from the keyboard you never look at the on-screen
+ * keys, so the whole cabinet simply grows — the LED window scales with it and
+ * the SVG stays crisp at any size. Widening beats a transform: no overlap, no
+ * blurred text, and the layout stays honest at every step.
+ */
+.cabinet[data-zoom='2'] {
+  width: min(44rem, 100%);
+}
+
+.cabinet[data-zoom='3'] {
+  width: min(58rem, 100%);
+}
 
 .cabinet {
   width: min(30rem, 100%);
@@ -180,13 +207,32 @@ body {
  * Window labels. On the real cabinet these were silkscreened and fixed; here
  * they follow the readout, so a number is never ambiguous.
  */
+/*
+ * Column widths are chosen so each column's CENTRE lands on the centre of the
+ * window it names, measured in the display's own 720-unit viewBox: the down
+ * digits sit at 117, the position digits at 329, the to-go digits at 579.
+ * Aligning to the bezel edges instead left "DOWN" floating left of its digit,
+ * because that window right-aligns its digits while the label did not.
+ */
 .window-legend {
   display: grid;
-  grid-template-columns: 1fr 1.4fr 1fr;
-  padding: 0.45rem 0.35rem 0.1rem;
+  grid-template-columns: 32.5% 26.4% 41.1%;
+  padding: 0 0 0.4rem;
   font-size: 0.5rem;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.14em;
   min-height: 1rem;
+}
+
+.window-legend span {
+  text-align: center;
+  /*
+   * The position label is wider than its window, so let it spill past the
+   * column rather than wrap — a wrapped label shoves the whole display down
+   * half a line. It stays centred on the digits either way, and at the
+   * narrowest cabinet it still clears its neighbours.
+   */
+  white-space: nowrap;
+  overflow: visible;
 }
 
 .window-legend span {
@@ -532,9 +578,22 @@ body {
 }
 
 @media (max-width: 30rem) {
-  .cabinet {
+  .cabinet,
+  .cabinet[data-zoom='2'],
+  .cabinet[data-zoom='3'] {
     width: 100%;
     padding: 1.1rem 0.9rem 0.9rem;
+  }
+
+  /*
+   * At this width the position label is wide enough to collide with DOWN and
+   * TO GO, since it deliberately overflows its column. Shrinking the whole
+   * legend keeps all three clear without dropping the half, which is the part
+   * that explains the tack mark.
+   */
+  .window-legend {
+    font-size: 0.42rem;
+    letter-spacing: 0.08em;
   }
 
   /* On mobile the on-screen keys are the primary input: keep them thumb-sized. */

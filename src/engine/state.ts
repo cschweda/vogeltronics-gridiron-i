@@ -15,6 +15,7 @@ import type {
   Phase,
   Readout,
   Skill,
+  ZoomLevel,
 } from '../types';
 import { FIELD_COLS, FIELD_LENGTH, FIELD_ROWS } from '../types';
 import type { Cell } from './defenders';
@@ -68,6 +69,7 @@ export interface GameState {
   readout: Readout;
   muted: boolean;
   blipStyle: BlipStyle;
+  zoom: ZoomLevel;
 
   /** Accumulators for the fixed-timestep loop. */
   defenderAccumMs: number;
@@ -116,6 +118,7 @@ export function initialState(): GameState {
     lastGain: 0,
     lastKickDistance: null,
     quarterExpired: false,
+    zoom: 1,
     readout: 'status',
     // The 1977 unit had no volume control and beeped from the moment you
     // switched it on. A web page that does that is rude, so sound starts off
@@ -156,6 +159,7 @@ function startGame(state: GameState, skill: Skill, rng: Rng): GameState {
       ...initialState(),
       muted: state.muted,
       blipStyle: state.blipStyle,
+      zoom: state.zoom,
     },
     newDrive(),
     rng,
@@ -289,7 +293,7 @@ function handleCommand(state: GameState, command: Command, rng: Rng): ReduceResu
   if (command === 'skill-off') {
     if (state.phase === 'POWER_OFF') return { state, events: [] };
     return {
-      state: { ...initialState(), muted: state.muted, blipStyle: state.blipStyle },
+      state: { ...initialState(), muted: state.muted, blipStyle: state.blipStyle, zoom: state.zoom },
       events: ['power-off'],
     };
   }
@@ -308,6 +312,11 @@ function handleCommand(state: GameState, command: Command, rng: Rng): ReduceResu
     return { state: { ...state, muted: !state.muted }, events: [] };
   }
 
+  if (command === 'zoom') {
+    const next = ((state.zoom % 3) + 1) as ZoomLevel;
+    return { state: { ...state, zoom: next }, events: [] };
+  }
+
   if (command === 'blip-style') {
     return {
       state: { ...state, blipStyle: state.blipStyle === 'round' ? 'dash' : 'round' },
@@ -321,6 +330,21 @@ function handleCommand(state: GameState, command: Command, rng: Rng): ReduceResu
 
   if (command === 'status') return readoutAndAdvance(state, 'status', rng);
   if (command === 'score') return readoutAndAdvance(state, 'score', rng);
+
+  const isPlayKey =
+    command === 'forward' || command === 'up' || command === 'down' || command === 'kick';
+
+  /*
+   * After the whistle, ANY play key sets up the next down — not only ST/SC.
+   * The 1977 unit needed that press because the readout was the only way to
+   * learn the situation; here the state is already on screen, so demanding a
+   * bookkeeping key before you may move again is pure friction. Mashing
+   * forward is what a player actually does. ST and SC keep their meaning:
+   * they also choose which numbers show.
+   */
+  if (isPlayKey && RESOLVED_PHASES.has(state.phase)) {
+    return readoutAndAdvance(state, state.readout, rng);
+  }
 
   if (command === 'kick') {
     // 4th down only, and only before the snap. Downs 1-3 do nothing at all.

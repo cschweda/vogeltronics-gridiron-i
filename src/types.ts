@@ -63,6 +63,13 @@ export interface Blip {
 
 export type BlipStyle = 'dash' | 'round';
 
+/**
+ * Display magnification. Playing from the keyboard you never look at the
+ * on-screen keys, so the LEDs may as well be big.
+ */
+export type ZoomLevel = 1 | 2 | 3;
+export const ZOOM_LEVELS: readonly ZoomLevel[] = [1, 2, 3];
+
 /* ---- machine ------------------------------------------------------------ */
 
 export type Skill = 'off' | 'pro1' | 'pro2';
@@ -90,7 +97,8 @@ export type Command =
   | 'skill-pro1'
   | 'skill-pro2'
   | 'mute'
-  | 'blip-style';
+  | 'blip-style'
+  | 'zoom';
 
 /** What the display is currently showing in the numeric windows. */
 export type Readout = 'status' | 'score';

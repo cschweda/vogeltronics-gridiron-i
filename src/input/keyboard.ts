@@ -21,6 +21,7 @@ const ALWAYS: Record<string, Command> = {
   ' ': 'kick',
   m: 'mute',
   b: 'blip-style',
+  z: 'zoom',
   '0': 'skill-off',
 };
 

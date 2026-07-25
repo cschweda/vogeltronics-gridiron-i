@@ -23,15 +23,30 @@ export const SCATTER_MAX_COL = FIELD_COLS - 1;
 export const DEEP_MIN_COL = 6;
 
 /**
+ * The runner's lane at the snap, kept clear for the first stride.
+ *
+ * Columns 2-8 is legal by the manual, but a tackler at column 2 in the middle
+ * lane sits two presses from a runner starting at column 0 — the play is over
+ * before the defense has moved once. Holding that one cell open guarantees a
+ * stride of daylight without touching the formation rule itself.
+ */
+export const SNAP_ROW = Math.floor(FIELD_ROWS / 2);
+export const SNAP_CLEAR_COL = SCATTER_MIN_COL;
+
+/**
  * PRO 1 cadence. PRO 2 reacts 50% faster, i.e. 1.5x the rate (a 2/3 interval).
  *
- * Tuned against the ratio that actually decides the game: defender moves per
- * player key-press. Simulated over 3000 seeded drives, a competent runner
- * scores on ~100% of drives at 0.25, ~38% at 0.5, ~20% at 0.75, and is shut
- * out entirely at 1.0 and above. At a normal ~200ms press cadence, 360ms puts
- * PRO 1 at ~0.56 (a real contest) and PRO 2 at ~0.83 (genuinely hard).
+ * What decides the game is defender moves per player key-press. Over 3000
+ * seeded drives a competent runner scores on ~100% of drives at a ratio of
+ * 0.25, ~38% at 0.5, ~20% at 0.75, and is shut out entirely at 1.0.
+ *
+ * This was 360ms, tuned against a simulated player pressing every 200ms and
+ * always choosing the best lane. A person is slower than that and does not
+ * play the optimum, so their real ratio sat near 0.8 — the shut-out end of
+ * the curve, which is exactly how it felt. 560ms puts an unhurried ~250ms
+ * presser at ~0.45 and still leaves PRO 2 a genuine step up.
  */
-export const PRO1_INTERVAL_MS = 360;
+export const PRO1_INTERVAL_MS = 560;
 export const PRO2_RATE_MULTIPLIER = 1.5;
 
 /** How often the defense gets to move, in milliseconds. */
@@ -63,6 +78,7 @@ export function scatterDefenders(rng: Rng): Cell[] {
       row: rng.intBetween(0, FIELD_ROWS - 1),
       col: rng.intBetween(SCATTER_MIN_COL, SCATTER_MAX_COL),
     };
+    if (candidate.row === SNAP_ROW && candidate.col === SNAP_CLEAR_COL) continue;
     if (taken.has(key(candidate))) continue;
     defenders.push(candidate);
     taken.add(key(candidate));

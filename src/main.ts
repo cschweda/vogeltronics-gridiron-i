@@ -111,7 +111,7 @@ function paint(): void {
         ? scoreReadout(state.score, state.clock)
         : statusReadout(state.drive),
   );
-  paintControls(cabinet, state.skill, state.muted, state.blipStyle);
+  paintControls(cabinet, state.skill, state.muted, state.blipStyle, state.zoom);
   paintLegend(
     cabinet,
     state.readout,

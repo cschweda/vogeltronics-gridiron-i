@@ -43,6 +43,7 @@ The game is **100% playable from the keyboard** — the on-screen keys mirror th
 | Power / skill | **0** = OFF · **1** = PRO 1 · **2** = PRO 2 |
 | Sound on / off (**starts off**) | **M** |
 | Blip style (dash / round) | **B** |
+| Zoom the display (1× / 2× / 3×) | **Z** |
 
 ## Stack
 

@@ -194,14 +194,36 @@ describe('tackles', () => {
     expect(g.events).toContain('whistle');
   });
 
-  test('directions do nothing after the whistle until ST or SC', () => {
+  test('a direction after the whistle sets up the next play rather than moving', () => {
     const g = game(11);
     g.powerOn();
     runUntilTackled(g);
-    const yard = runnerYardLine(g.state);
+    const pending = g.state.pendingDrive;
+
     g.press('forward');
-    expect(g.state.phase).toBe('TACKLED');
-    expect(runnerYardLine(g.state)).toBe(yard);
+
+    expect(g.state.phase).not.toBe('TACKLED');
+    expect(g.state.drive).toEqual(pending);
+    expect(g.state.runner).toEqual({ row: 1, col: 0 });
+  });
+
+  test('the runner does not also advance a yard on the key that continues', () => {
+    const g = game(11);
+    g.powerOn();
+    runUntilTackled(g);
+    g.press('forward');
+    // Continuing and running are separate presses; the snap has not happened.
+    expect(runnerYardLine(g.state)).toBe(g.state.drive.ballOn);
+  });
+
+  test('a settings toggle after the whistle does not continue the game', () => {
+    for (const command of ['mute', 'blip-style', 'zoom'] as const) {
+      const g = game(11);
+      g.powerOn();
+      runUntilTackled(g);
+      g.press(command);
+      expect(g.state.phase).toBe('TACKLED');
+    }
   });
 
   test('ST sets up the next play with a fresh defense', () => {
@@ -323,5 +345,29 @@ describe('smoke: a seeded drive reaches a touchdown', () => {
     expect(g.state.score).toBe(7);
     expect(g.events).toContain('fanfare');
     expect(g.state.pendingDrive).toEqual({ ballOn: 20, down: 1, toGo: 10 });
+  });
+});
+
+describe('display zoom', () => {
+  test('cycles 1 -> 2 -> 3 -> 1', () => {
+    const g = game();
+    g.powerOn();
+    expect(g.state.zoom).toBe(1);
+    g.press('zoom');
+    expect(g.state.zoom).toBe(2);
+    g.press('zoom');
+    expect(g.state.zoom).toBe(3);
+    g.press('zoom');
+    expect(g.state.zoom).toBe(1);
+  });
+
+  test('survives a power cycle, like the other display preferences', () => {
+    const g = game();
+    g.powerOn();
+    g.press('zoom');
+    g.press('skill-off');
+    expect(g.state.zoom).toBe(2);
+    g.powerOn();
+    expect(g.state.zoom).toBe(2);
   });
 });
