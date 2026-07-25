@@ -117,6 +117,7 @@ function paint(): void {
     state.readout,
     isGoalToGo(state.drive),
     state.phase !== 'POWER_OFF',
+    fieldPosition(state.drive.ballOn).marker,
   );
   cabinet.root.dataset['phase'] = state.phase;
 

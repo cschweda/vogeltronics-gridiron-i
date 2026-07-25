@@ -149,18 +149,50 @@ function buildDisplay(): DisplayHandles {
   });
   digitsRow.appendChild(decimal);
 
-  // the 50-yard tack mark, drawn as LED segments on either side of the number
-  const tackOwn = el('g', { class: 'tack' });
-  tackOwn.appendChild(el('rect', { x: midX + 3 * (DIGIT_W + 10) - 4, y: 6, width: SEG_T, height: DIGIT_H - 12, rx: 2, class: 'seg' }));
-  tackOwn.appendChild(el('rect', { x: midX + 3 * (DIGIT_W + 10) - 16, y: 6, width: 12, height: SEG_T, rx: 2, class: 'seg' }));
-  tackOwn.appendChild(el('rect', { x: midX + 3 * (DIGIT_W + 10) - 16, y: DIGIT_H - 12, width: 12, height: SEG_T, rx: 2, class: 'seg' }));
-  digitsRow.appendChild(tackOwn);
+  /*
+   * The 50-yard line, as LED segments. The number sits on the ball's side of
+   * it: `22⊣` is your own 22, `⊢22` is theirs.
+   *
+   * The arms have to be long relative to the bar or the three segments blur
+   * into a single block at display size and read as a meaningless bar — which
+   * is exactly what happened at 12px. The bracket has to be legible as a
+   * bracket for the convention to survive at all.
+   */
+  const ARM = 20;
+  const TACK_TOP = 6;
+  const TACK_H = DIGIT_H - 12;
 
-  const tackOpponent = el('g', { class: 'tack' });
-  tackOpponent.appendChild(el('rect', { x: midX - 14, y: 6, width: SEG_T, height: DIGIT_H - 12, rx: 2, class: 'seg' }));
-  tackOpponent.appendChild(el('rect', { x: midX - 14, y: 6, width: 12, height: SEG_T, rx: 2, class: 'seg' }));
-  tackOpponent.appendChild(el('rect', { x: midX - 14, y: DIGIT_H - 12, width: 12, height: SEG_T, rx: 2, class: 'seg' }));
-  digitsRow.appendChild(tackOpponent);
+  /** `dir` is which way the arms reach: -1 wraps the number to the left (⊣). */
+  function buildTack(barX: number, dir: -1 | 1): SVGGElement {
+    const group = el('g', { class: 'tack' });
+    const armX = dir === -1 ? barX - ARM : barX + SEG_T;
+
+    group.appendChild(el('rect', { x: barX, y: TACK_TOP, width: SEG_T, height: TACK_H, rx: 2, class: 'seg' }));
+    group.appendChild(el('rect', { x: armX, y: TACK_TOP, width: ARM, height: SEG_T, rx: 2, class: 'seg' }));
+    group.appendChild(el('rect', { x: armX, y: TACK_TOP + TACK_H - SEG_T, width: ARM, height: SEG_T, rx: 2, class: 'seg' }));
+
+    // Not announced (the svg is aria-hidden; the live region narrates instead),
+    // but it still gives a hover tooltip to anyone wondering what the bar is.
+    const title = el('title');
+    title.textContent = 'The 50-yard line — the number sits on the ball’s side of it';
+    group.appendChild(title);
+
+    digitsRow.appendChild(group);
+    return group;
+  }
+
+  /*
+   * Anchor the tacks to where the digits actually end, with a clear gap.
+   * Hand-tuned offsets had the arms drawn straight over the last digit, so the
+   * digit and the bracket fused into one wide shape — which is why it read as
+   * an unexplained bar rather than a marker beside a number.
+   */
+  const midDigitsLeft = midX;
+  const midDigitsRight = midX + 2 * (DIGIT_W + 10) + DIGIT_W;
+  const TACK_GAP = 10;
+
+  const tackOwn = buildTack(midDigitsRight + TACK_GAP + ARM, -1);
+  const tackOpponent = buildTack(midDigitsLeft - TACK_GAP - ARM - SEG_T, 1);
 
   // right window: two digits
   right.push(buildDigit(digitsRow, 540, 0));
@@ -369,18 +401,30 @@ export function buildCabinet(mount: HTMLElement): CabinetHandles {
   };
 }
 
-/** Label the three windows for whatever they are currently showing. */
+/**
+ * Label the three windows for whatever they are currently showing.
+ *
+ * The middle label also names which half of the field you are on. The tack
+ * mark encodes that — the number sits on the ball's side of the 50 — but that
+ * is a 1977 convention the manual used to explain, and a player who has not
+ * read the manual just sees an unexplained bar. Naming the half decodes the
+ * glyph without printing the number twice.
+ */
 export function paintLegend(
   handles: CabinetHandles,
   readout: Readout,
   goalToGo: boolean,
   powered: boolean,
+  marker: FieldMarker = 'none',
 ): void {
+  const half =
+    marker === 'own' ? 'YOUR HALF' : marker === 'opponent' ? 'THEIR HALF' : 'MIDFIELD';
+
   const labels: [string, string, string] = !powered
     ? ['', '', '']
     : readout === 'score'
       ? ['YOUR SCORE', 'TIME LEFT', 'VISITOR']
-      : ['DOWN', 'FIELD POSITION', goalToGo ? 'GOAL TO GO' : 'TO GO'];
+      : ['DOWN', `FIELD POSITION · ${half}`, goalToGo ? 'GOAL TO GO' : 'TO GO'];
 
   handles.legendCells.forEach((cell, i) => {
     const text = labels[i] ?? '';
