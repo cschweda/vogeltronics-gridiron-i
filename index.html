@@ -17,7 +17,15 @@
       property="og:description"
       content="A solo, keyboard-first browser recreation of the 1977 VogelTronics Gridiron LED handheld football game."
     />
-    <meta property="og:image" content="./og-image.png" />
+    <!-- Absolute: most scrapers will not resolve a relative og:image. -->
+    <meta property="og:image" content="https://gridiron.vogeltronics.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="GRIDIRON — Electronic Football, 1977, beside the VogelTronics box art."
+    />
+    <meta property="og:site_name" content="VogelTronics" />
     <meta name="twitter:card" content="summary_large_image" />
   </head>
   <body>
