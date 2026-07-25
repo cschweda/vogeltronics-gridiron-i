@@ -72,7 +72,7 @@ SVG_TEMPLATE = """<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://ww
     <text x="178" y="41" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-weight="800" font-size="27" letter-spacing="2.5" font-style="italic" fill="#ffffff">GAMES THAT THINK!</text>
   </g>
 
-  <text x="80" y="586" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-weight="500" font-size="20" letter-spacing="2" fill="#84848d">vogeltronics.metaincognita.com</text>
+  <text x="80" y="586" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-weight="500" font-size="20" letter-spacing="2" fill="#84848d">{url}</text>
 </svg>
 """
 
@@ -104,6 +104,9 @@ def main() -> None:
     ap.add_argument("--title", required=True)
     ap.add_argument("--subtitle", required=True)
     ap.add_argument("--logo", default="docs/images/vogeltronics-logo.svg")
+    # The brand root, not the game's own subdomain: every game in the catalog
+    # sits at <game>.vogeltronics.com, and the card should point at the house.
+    ap.add_argument("--url", default="vogeltronics.com")
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
 
@@ -133,6 +136,7 @@ def main() -> None:
         title=args.title,
         subtitle=args.subtitle,
         title_size=title_size,
+        url=args.url,
     )
 
     with tempfile.TemporaryDirectory() as td:
