@@ -45,7 +45,7 @@ Because Gridiron 2 is a later, separate project, the one design rule that matter
 
 **Score readout (SC key).** Shows **YOUR score — TIME REMAINING — 0**, and also readies the field for the next play. *You must press ST or SC after each play to set up the next one.*
 
-**Clock.** Four 15-minute quarters, but fast: a quarter lasts **~2½ real minutes** (~10-minute game) — the clock drops 0.1 game-minute per real second and **only ticks during a play**. It counts in **decimals** (7½ reads `7.5`) and shows `0.0` at quarter's end (the manual's `0:0`, rendered decimal for display consistency), then resets to 15 on the next play. If the clock hits zero mid-play, the play runs to completion — the quarter (or in Q4, the game) ends when the play resolves. Quarter transitions (manual p. 4): into Q2 and Q4, **field position, down, and yards to go carry over** the break; at halftime, **Q3 opens on a fresh 1st & 10 at your own 20** — the solo stand-in for the manual's second-half possession change. You start the game 1st & 10 on your own 20; press ST to roll into each new quarter. Game ends when the clock expires in the 4th.
+**Clock.** Four 15-minute quarters, but fast: a quarter is **~2½ real minutes of ball-in-play** (~10 minutes of live ball per game) — the clock drops 0.1 game-minute per real second and **only ticks during a play**. A session runs longer than that in wall-clock terms, since the clock stops between plays while you press ST/SC; the 10 minutes is live-ball time, not session length. It counts in **decimals** (7½ reads `7.5`) and shows `0.0` at quarter's end (the manual's `0:0`, rendered decimal for display consistency), then resets to 15 on the next play. If the clock hits zero mid-play, the play runs to completion — the quarter (or in Q4, the game) ends when the play resolves. Quarter transitions (manual p. 4): into Q2 and Q4, **field position, down, and yards to go carry over** the break; at halftime, **Q3 opens on a fresh 1st & 10 at your own 20** — the solo stand-in for the manual's second-half possession change. You start the game 1st & 10 on your own 20; press ST to roll into each new quarter. Game ends when the clock expires in the 4th.
 
 **Skill switch — OFF / PRO 1 / PRO 2.** PRO 1 = normal defense speed; **PRO 2 = defense reacts 50% faster**. Switching between PRO 1 and PRO 2 mid-game **ends the game**. New game = switch **OFF, then back**. The on-screen slide switch is always live, like the physical flip. **Keyboard 0 (OFF) works at any time** — it's the deliberate keyboard abort: press 0, then 1 or 2, for a fresh game without touching the pointer (0 sits isolated at the far right of the number row; accident risk is negligible). **Keyboard 1/2 work only between games** — on QWERTY they sit directly above W, and a stray reach for W must never flip PRO levels mid-drive.
 
@@ -178,11 +178,33 @@ STACK & DELIVERY
 - Ship a runnable repo (package.json, vite.config.ts, tsconfig.json, index.html,
   src/). `npm i && npm run dev` must work, `npm run build` must typecheck clean
   with no console errors.
-- Include standard repo files: .gitignore (Node/Vite: node_modules, dist, .env*,
-  logs, .DS_Store), .nvmrc matching the Node version pinned in netlify.toml,
-  LICENSE (MIT, "Copyright (c) 2026 Chris Schweda"), README.md (what it is, quick
-  start, controls table, Netlify deploy steps), and CHANGELOG.md in Keep a
-  Changelog format with an initial 0.1.0 entry describing the v1 feature set.
+- Include standard repo files: .nvmrc matching the Node version pinned in
+  netlify.toml, and CHANGELOG.md in Keep a Changelog format with an initial
+  0.1.0 entry describing the v1 feature set.
+
+EXISTING REPO — DO NOT CLOBBER (read before writing anything)
+- This repo is NOT empty. It already contains a README.md, LICENSE,
+  .gitignore, docs/, and tools/make-og-image.py. Read each before touching it.
+- .gitignore: EXTEND IT, never regenerate it. It carries a required line —
+  `docs/Mattel-Football.pdf` — that keeps the scanned 1977 Mattel manual out of
+  version control. That file is present locally and must stay untracked;
+  dropping the line would commit 1.5 MB of someone else's copyrighted scan.
+  Verify with `git check-ignore -v docs/Mattel-Football.pdf` before you finish.
+- README.md: EDIT IT, never replace it. It already has the box-art header,
+  the VogelTronics universe links, and the disclaimer. Add quick start, the
+  controls table, and Netlify deploy steps; keep everything already there and
+  flip the "spec complete — build pending" status line to reflect the build.
+- LICENSE: already MIT, © 2026 Chris Schweda. Leave it alone.
+- ASSETS ALREADY EXIST — reuse, do not invent. Copy into public/:
+    docs/images/vogeltronics-logo.svg  -> public/vogeltronics-logo.svg
+    docs/images/og-image.png           -> public/og-image.png
+    docs/images/gridiron-boxart.png    -> public/gridiron-boxart.png
+  The cabinet's VogelTronics maker mark must inline/reference that existing
+  logo SVG — do NOT draw a new wordmark. Wire og-image.png into index.html as
+  the og:image meta tag. Generate only the favicon.
+- tools/make-og-image.py already exists and is shared across the whole
+  VogelTronics catalog. Do not modify or move it. Add the manual's print
+  source alongside it at tools/manual/.
 - The README must end with a DISCLAIMER: Gridiron is an original, independent
   homage, not affiliated with or endorsed by Mattel; no trademarks, logos, art,
   assets, or code from the original product are used; all VogelTronics/Gridiron
@@ -251,9 +273,13 @@ READOUTS (rendered as LED digits)
   ready the field for the next play.
 
 CLOCK
-- Four 15-minute quarters, but fast: a quarter lasts ~2.5 real minutes (~10-min
-  game) — the clock drops 0.1 game-minute per real second and ONLY ticks during
-  a play. It counts in DECIMALS (7.5 = 7 1/2 min), shows 0.0 at quarter end,
+- Four 15-minute quarters, but fast: a quarter is ~2.5 real minutes of
+  BALL-IN-PLAY time — the clock drops 0.1 game-minute per real second and ONLY
+  ticks during a play. (Wall-clock per session is longer, since the clock is
+  stopped between plays while the player presses ST/SC; ~10 minutes is the
+  in-play total, not the session length. Do not promise "a 10-minute game" in
+  the README — say the clock counts only while the ball is live.)
+  It counts in DECIMALS (7.5 = 7 1/2 min), shows 0.0 at quarter end,
   then resets to 15 on the next play. If the clock hits zero mid-play, the play
   runs to completion; the quarter (or in Q4, the game) ends when the play
   resolves. Into Q2 and Q4, field position, down, and yards to go carry over
