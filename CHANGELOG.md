@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] — 2026-07-25
+
+### Changed
+
+- The social card now reads `gridiron.vogeltronics.com` rather than the bare
+  `vogeltronics.com`, which resolves to the corporate history and not to this
+  game. The shared generator requires `--url` now, so no card can inherit a
+  default that is wrong for it.
+- README: the universe links no longer describe the apex as the catalog. The
+  apex is the history; the catalog is indexed at MetaIncognita; each game sits
+  on its own subdomain.
+
 ## [0.2.0] — 2026-07-25
 
 Playability. The first version was faithful and nearly unplayable; this one is

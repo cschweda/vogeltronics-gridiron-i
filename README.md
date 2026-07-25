@@ -79,18 +79,19 @@ python3 ../vogeltronics-history/tools/make-og-image.py \
   --logo docs/images/vogeltronics-logo.svg \
   --title GRIDIRON \
   --subtitle "ELECTRONIC FOOTBALL · 1977" \
+  --url gridiron.vogeltronics.com \
   --out docs/images/og-image.png
 cp docs/images/og-image.png public/og-image.png
 ```
 
-`--url` defaults to `vogeltronics.com` — the brand root, since each game sits on its own subdomain.
+`--url` is required: it is the address printed on the card, so each property advertises its own.
 
 ## The VogelTronics universe
 
-- **[The whole story](https://history.vogeltronics.com)** — the corporate history, 1961–1983 ([repo](https://github.com/cschweda/vogeltronics-history))
-- **[vogel-vox](https://github.com/cschweda/vogeltronics-vogel-vox)** — the voice synthesis behind Rovacon
-- **[vogeltronics.com](https://vogeltronics.com)** — where the playable catalog lives
-- **[MetaIncognita](https://metaincognita.com)** — the wider workshop
+- **[The whole story](https://vogeltronics.com)** — the corporate history, 1961–1983. The bare domain serves it, as does `history.vogeltronics.com` ([repo](https://github.com/cschweda/vogeltronics-history))
+- **[VogelVox](https://vogelvox.vogeltronics.com)** — the voice synthesis behind Rovacon ([repo](https://github.com/cschweda/vogeltronics-vogel-vox))
+- **[MetaIncognita](https://metaincognita.com)** — where the playable catalog is indexed
+- Each game lives on its own subdomain: this one at `gridiron.vogeltronics.com`
 
 ## Disclaimer
 
