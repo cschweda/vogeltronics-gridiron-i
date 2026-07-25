@@ -88,7 +88,7 @@ cp docs/images/og-image.png public/og-image.png
 
 ## The VogelTronics universe
 
-- **[The whole story](https://vogeltronics.com)** — the corporate history, 1961–1983. The bare domain serves it, as does `history.vogeltronics.com` ([repo](https://github.com/cschweda/vogeltronics-history))
+- **[vogeltronics.com](https://vogeltronics.com)** — the corporate history, 1961–1983, and the universe's front door ([repo](https://github.com/cschweda/vogeltronics-history))
 - **[VogelVox](https://vogelvox.vogeltronics.com)** — the voice synthesis behind Rovacon ([repo](https://github.com/cschweda/vogeltronics-vogel-vox))
 - **[MetaIncognita](https://metaincognita.com)** — where the playable catalog is indexed
 - Each game lives on its own subdomain: this one at `gridiron.vogeltronics.com`
