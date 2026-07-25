@@ -1,0 +1,10 @@
+# VogelTronics Gridiron — static single-page build.
+# No redirects on purpose: there is no client-side routing, and a catch-all
+# would only mask genuine asset 404s behind a 200 index.html.
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"

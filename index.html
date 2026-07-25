@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>GRIDIRON — VogelTronics Electronic Football (1977)</title>
+    <meta
+      name="description"
+      content="A solo, keyboard-first browser recreation of the 1977 VogelTronics Gridiron LED handheld football game. One bright blip, five tacklers, four downs."
+    />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GRIDIRON — VogelTronics Electronic Football (1977)" />
+    <meta
+      property="og:description"
+      content="A solo, keyboard-first browser recreation of the 1977 VogelTronics Gridiron LED handheld football game."
+    />
+    <meta property="og:image" content="./og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body>
+    <header class="page-head">
+      <h1>VogelTronics Gridiron — solo running game</h1>
+      <p>
+        The 1977 original was a two-player game. This recreation adapts it for solo play: you run
+        the offense, the computer rushes the defense. Fully playable from the keyboard.
+      </p>
+    </header>
+
+    <main id="game"></main>
+
+    <p class="hint" id="hint" role="status" aria-live="polite"></p>
+
+    <footer class="page-foot">
+      <table class="controls-table">
+        <caption class="sr-only">
+          Keyboard controls
+        </caption>
+        <thead>
+          <tr><th scope="col">Action</th><th scope="col">Keys</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Run toward goal</td><td>D or →</td></tr>
+          <tr><td>Lane up / down</td><td>W / S (or ↑ / ↓)</td></tr>
+          <tr><td>Status readout (ST)</td><td>T</td></tr>
+          <tr><td>Score readout (SC)</td><td>C</td></tr>
+          <tr><td>Kick (4th down only)</td><td>K or Space</td></tr>
+          <tr><td>Power / skill</td><td>0 = OFF · 1 = PRO 1 · 2 = PRO 2</td></tr>
+          <tr><td>Sound on / off <em>(starts off)</em></td><td>M</td></tr>
+          <tr><td>Blip style</td><td>B</td></tr>
+        </tbody>
+      </table>
+
+      <p>
+        <a href="./gridiron-manual.pdf" download>OWNER'S MANUAL (PDF)</a>
+      </p>
+
+      <p>
+        Gridiron is an original, independent work created as an affectionate homage to the 1977
+        Mattel Electronics Football handheld. It is not affiliated with, endorsed by, sponsored by,
+        or connected to Mattel, Inc. in any way. "VogelTronics" and "Gridiron" are wholly fictional
+        and original.
+      </p>
+    </footer>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

@@ -14,11 +14,24 @@
 
 The 1977 original was a two-player game (that's what the box says, and boxes never lie); this recreation adapts it for **solo play** — you run the offense, the computer rushes the defense.
 
-> **Status: spec complete — build pending.** The manual-verified spec and the self-contained build prompt live in [`docs/gridiron-spec-and-prompt.md`](docs/gridiron-spec-and-prompt.md). A separate future project, **Gridiron II**, will reuse this engine and add THE FORWARD PASS — it says so right on the box.
+> **Status: v1 built and playable.** The manual-verified spec and the build prompt live in [`docs/gridiron-spec-and-prompt.md`](docs/gridiron-spec-and-prompt.md). A separate future project, **Gridiron II**, will reuse this engine and add THE FORWARD PASS — it says so right on the box.
 
-## Planned controls (keyboard-first)
+## Quick start
 
-The game will be **100% playable from the keyboard** — the on-screen keys mirror the keyboard, never replace it.
+```bash
+npm install
+npm run dev      # http://localhost:5173
+npm test         # Vitest, all seeded — no flakes
+npm run build    # typecheck + production bundle into dist/
+```
+
+Append `?seed=1977` to the URL to replay an identical game — every random draw
+in Gridiron (defender scatter, pursuit, kick distance) comes from one seeded
+generator.
+
+## Controls (keyboard-first)
+
+The game is **100% playable from the keyboard** — the on-screen keys mirror the keyboard, never replace it. Tab is deliberately unbound, so it stays free for focus navigation.
 
 | Action | Keys |
 |---|---|
@@ -28,12 +41,26 @@ The game will be **100% playable from the keyboard** — the on-screen keys mirr
 | Score readout (SC) | **C** |
 | Kick (4th down only) | **K** or **Space** |
 | Power / skill | **0** = OFF · **1** = PRO 1 · **2** = PRO 2 |
-| Mute | **M** |
+| Sound on / off (**starts off**) | **M** |
 | Blip style (dash / round) | **B** |
 
-## Planned stack
+## Stack
 
-Vite + TypeScript (vanilla, no framework) · SVG cabinet + LED field · Web Audio oscillators (no audio files) · seeded RNG · Vitest · Netlify static deploy · a downloadable period **Owner's Manual** (PDF), played completely straight.
+Vite + TypeScript (vanilla, no framework) · SVG LED display + CSS cabinet · Web Audio oscillators (no audio files) · seeded RNG · Vitest · Netlify static deploy · a downloadable period [**Owner's Manual**](public/gridiron-manual.pdf) (PDF), played completely straight.
+
+The engine (`src/engine/`) is framework-free and contains no DOM references — it imports cleanly in Node, which is what keeps the rules testable and what will let **Gridiron II** import it wholesale.
+
+## A note on the clock
+
+A quarter is 15 game-minutes and burns at 0.1 per real second, but **the clock only runs while the ball is live**. That is ~2½ real minutes of live ball per quarter, ~10 minutes per game — a session takes considerably longer in wall-clock terms, since the clock stops between plays while you press ST or SC.
+
+## Deploying to Netlify
+
+`netlify.toml` is committed and needs no configuration: build `npm run build`, publish `dist`, Node pinned to 22. There are deliberately **no redirects** — this is a single page with no client-side routing, and a catch-all would only mask genuine asset 404s.
+
+```bash
+netlify deploy --prod    # or connect the repo in the Netlify UI
+```
 
 ## Repo assets
 

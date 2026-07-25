@@ -1,0 +1,693 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>VogelTronics Gridiron — Instructions (No. 2100)</title>
+    <style>
+      /*
+       * Print source for the Gridiron Owner's Manual.
+       * Digest size, 5.5in x 8.5in. Rendered to PDF by render.mjs.
+       *
+       * House template: every VogelTronics game reuses this section grammar.
+       */
+      @page {
+        size: 5.5in 8.5in;
+        margin: 0;
+      }
+
+      * { box-sizing: border-box; }
+
+      html, body {
+        margin: 0;
+        padding: 0;
+        font-family: "Times New Roman", Times, serif;
+        color: #14110d;
+        background: #fff;
+      }
+
+      .page {
+        width: 5.5in;
+        height: 8.5in;
+        padding: 0.55in 0.6in;
+        page-break-after: always;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .page:last-child { page-break-after: auto; }
+
+      h1, h2, h3 { font-family: Helvetica, Arial, sans-serif; }
+
+      h2 {
+        font-size: 11pt;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        border-bottom: 1.5pt solid #14110d;
+        padding-bottom: 3pt;
+        margin: 0 0 10pt;
+      }
+
+      h3 {
+        font-size: 9.5pt;
+        margin: 12pt 0 3pt;
+        letter-spacing: 0.04em;
+      }
+
+      p, li { font-size: 9.5pt; line-height: 1.42; margin: 0 0 7pt; }
+
+      ol.steps { padding-left: 14pt; margin: 0 0 8pt; }
+      ol.steps > li { margin-bottom: 5pt; }
+
+      .folio {
+        position: absolute;
+        bottom: 0.32in;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 7.5pt;
+        color: #6a6259;
+      }
+
+      /* ---- cover ---- */
+
+      .cover {
+        background: #14110d;
+        color: #f4efe4;
+        align-items: center;
+        text-align: center;
+        justify-content: flex-start;
+        padding-top: 0.75in;
+      }
+
+      .cover .logo { width: 2.5in; margin-bottom: 0.18in; }
+
+      .cover .art {
+        width: 2.75in;
+        border: 2pt solid #6f2018;
+        margin: 0.1in 0 0.22in;
+      }
+
+      .cover h1 {
+        font-size: 30pt;
+        letter-spacing: 0.16em;
+        margin: 0 0 2pt;
+        color: #fff;
+      }
+
+      .cover .sub {
+        font-size: 10pt;
+        letter-spacing: 0.3em;
+        color: #e0503c;
+        margin: 0 0 0.3in;
+        font-family: Helvetica, Arial, sans-serif;
+      }
+
+      .cover .instructions {
+        font-family: Helvetica, Arial, sans-serif;
+        font-size: 15pt;
+        letter-spacing: 0.42em;
+        border: 1.5pt solid #f4efe4;
+        padding: 6pt 16pt;
+        margin-bottom: 0.22in;
+      }
+
+      .cover .modelno {
+        font-family: Helvetica, Arial, sans-serif;
+        font-size: 8.5pt;
+        letter-spacing: 0.2em;
+        color: #b9b1a4;
+      }
+
+      /* ---- contents ---- */
+
+      .toc { list-style: none; padding: 0; margin: 0; }
+      .toc li {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 0.5pt dotted #9a9186;
+        padding: 3pt 0;
+        font-size: 9.5pt;
+      }
+
+      /* ---- diagrams ---- */
+
+      .diagram {
+        border: 1pt solid #14110d;
+        padding: 7pt;
+        margin: 6pt 0 9pt;
+        text-align: center;
+        background: #f7f4ee;
+      }
+
+      .diagram figcaption {
+        font-family: Helvetica, Arial, sans-serif;
+        font-size: 7.5pt;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-top: 5pt;
+        color: #4a443c;
+      }
+
+      table.keys {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 9pt;
+        margin-bottom: 8pt;
+      }
+
+      table.keys th,
+      table.keys td {
+        border-bottom: 0.5pt solid #b8b0a4;
+        padding: 4pt 3pt;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      table.keys th {
+        font-family: Helvetica, Arial, sans-serif;
+        font-size: 7.5pt;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .keycap {
+        font-family: Helvetica, Arial, sans-serif;
+        font-weight: bold;
+        border: 1pt solid #14110d;
+        border-radius: 3pt;
+        padding: 1pt 5pt;
+        font-size: 8.5pt;
+        white-space: nowrap;
+      }
+
+      .note {
+        border-left: 2.5pt solid #a8321f;
+        padding: 5pt 0 5pt 8pt;
+        margin: 8pt 0;
+        font-size: 9pt;
+      }
+
+      /* ---- warranty ---- */
+
+      .warranty p { font-size: 8.2pt; line-height: 1.38; }
+      .address {
+        font-family: Helvetica, Arial, sans-serif;
+        font-size: 8.5pt;
+        line-height: 1.4;
+        margin: 8pt 0;
+        padding: 7pt 9pt;
+        border: 1pt solid #14110d;
+        display: inline-block;
+      }
+
+      /* ---- back cover ---- */
+
+      .back {
+        background: #14110d;
+        color: #f4efe4;
+      }
+
+      .back h2 {
+        color: #fff;
+        border-bottom-color: #6f6558;
+      }
+
+      .catalog { list-style: none; padding: 0; margin: 0 0 auto; }
+
+      .catalog li {
+        border-bottom: 0.5pt solid #3a342c;
+        padding: 7pt 0;
+      }
+
+      .catalog .name {
+        font-family: Helvetica, Arial, sans-serif;
+        font-size: 10pt;
+        letter-spacing: 0.1em;
+        color: #e0503c;
+        display: block;
+      }
+
+      .catalog .blurb { font-size: 8.5pt; color: #cdc5b8; margin: 2pt 0 0; }
+
+      .houserule {
+        font-size: 8pt;
+        line-height: 1.4;
+        color: #cdc5b8;
+        border-top: 0.5pt solid #3a342c;
+        border-bottom: 0.5pt solid #3a342c;
+        padding: 8pt 0;
+        margin: 14pt 0 0;
+        text-align: center;
+        font-style: italic;
+      }
+
+      .finest {
+        font-size: 5pt;
+        line-height: 1.3;
+        color: #6a6258;
+        margin: 10pt 0 0;
+        text-align: center;
+      }
+
+      .back .sig {
+        text-align: center;
+        font-family: Helvetica, Arial, sans-serif;
+        font-size: 8pt;
+        letter-spacing: 0.2em;
+        color: #b9b1a4;
+        margin-top: 12pt;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ============ 1. COVER ============ -->
+    <section class="page cover">
+      <img class="logo" src="../../docs/images/vogeltronics-logo.svg" alt="VogelTronics" />
+      <h1>GRIDIRON</h1>
+      <p class="sub">ELECTRONIC FOOTBALL</p>
+      <img class="art" src="../../docs/images/gridiron-boxart.png" alt="Gridiron" />
+      <p class="instructions">INSTRUCTIONS</p>
+      <p class="modelno">NO. 2100 &nbsp;·&nbsp; 2 PLAYERS &nbsp;·&nbsp; 9-VOLT BATTERY</p>
+      <p class="folio" style="color: #6a6258">VogelTronics · Elk Grove Village, Illinois</p>
+    </section>
+
+    <!-- ============ 2. CONTENTS + BATTERY ============ -->
+    <section class="page">
+      <h2>Contents</h2>
+      <ul class="toc">
+        <li><span>1. Battery and Setup</span><span>2</span></li>
+        <li><span>2. Your Control Keys</span><span>3</span></li>
+        <li><span>3. Reading the Display</span><span>4</span></li>
+        <li><span>4. How to Play</span><span>5</span></li>
+        <li><span>5. Scoring and Kicking</span><span>6</span></li>
+        <li><span>6. Strategy</span><span>7</span></li>
+        <li><span>7. Care of Your Game</span><span>8</span></li>
+        <li><span>8. Limited Warranty</span><span>9</span></li>
+      </ul>
+
+      <h2 style="margin-top: 22pt">1. Battery and Setup</h2>
+      <ol class="steps">
+        <li>Turn the game face down. Press the ribbed cover at the base of the
+          cabinet and slide it free.</li>
+        <li>Fit one 9-volt battery to the connector. The connector seats one way
+          only; do not force it.</li>
+        <li>Tuck the leads into the well so they do not bind, and slide the cover
+          back until it clicks.</li>
+        <li>Move the slide switch from OFF to PRO&nbsp;1. The display will light.</li>
+      </ol>
+
+      <p>If the blips are faint or the tone is weak, the battery is low. Fit a
+        fresh one. Remove the battery whenever the game will be stored for a
+        month or more.</p>
+
+      <div class="note">
+        <strong>Important.</strong> Always leave the switch at OFF when you are
+        finished playing. The game draws current whenever the display is lit.
+      </div>
+
+      <p class="folio">2</p>
+    </section>
+
+    <!-- ============ 3. CONTROL KEYS ============ -->
+    <section class="page">
+      <h2>2. Your Control Keys</h2>
+
+      <table class="keys">
+        <thead>
+          <tr><th>Key</th><th>What it does</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="keycap">◄▶</span></td>
+            <td>Advances your ball carrier one yard toward your opponent's
+              goal. One press, one yard.</td>
+          </tr>
+          <tr>
+            <td><span class="keycap">▲</span> <span class="keycap">▼</span></td>
+            <td>Shifts your ball carrier one lane up or down. A shift costs you
+              no yardage.</td>
+          </tr>
+          <tr>
+            <td><span class="keycap">ST</span></td>
+            <td>Status. Shows the down, your field position, and the yards
+              needed for a first down. Also sets the field for the next play.</td>
+          </tr>
+          <tr>
+            <td><span class="keycap">SC</span></td>
+            <td>Score. Shows the score and the time left in the quarter. Also
+              sets the field for the next play.</td>
+          </tr>
+          <tr>
+            <td><span class="keycap">K</span></td>
+            <td>Kick. Accepted on fourth down only.</td>
+          </tr>
+          <tr>
+            <td><span class="keycap">OFF / PRO 1 / PRO 2</span></td>
+            <td>Power and skill. PRO&nbsp;2 defenders react half again as fast
+              as PRO&nbsp;1.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Beginning a play</h3>
+      <p>The defense holds still until you commit. Your first press of
+        <span class="keycap">◄▶</span>, <span class="keycap">▲</span> or
+        <span class="keycap">▼</span> starts the clock and starts the rush.
+        Until then you may study the formation as long as you like.</p>
+
+      <h3>Between plays</h3>
+      <p>After every play, press <span class="keycap">ST</span> or
+        <span class="keycap">SC</span>. The game will not set the next play
+        until you do.</p>
+
+      <div class="note">
+        Changing the switch between PRO&nbsp;1 and PRO&nbsp;2 during a game ends
+        that game. To begin again, move the switch to OFF and back.
+      </div>
+
+      <p class="folio">3</p>
+    </section>
+
+    <!-- ============ 4. READING THE DISPLAY ============ -->
+    <section class="page">
+      <h2>3. Reading the Display</h2>
+
+      <p>The playing field is three lanes deep and nine yards long. Your ball
+        carrier is the <strong>bright</strong> blip. The five
+        <strong>dim</strong> blips are the defensive tacklers.</p>
+
+      <figure class="diagram">
+        <svg width="260" height="86" viewBox="0 0 260 86">
+          <rect width="260" height="86" fill="#2a0906" rx="5" />
+          <g fill="#5a0d08">
+            <circle cx="26" cy="20" r="5" /><circle cx="52" cy="20" r="5" />
+            <circle cx="78" cy="20" r="5" /><circle cx="104" cy="20" r="5" />
+            <circle cx="130" cy="20" r="5" /><circle cx="156" cy="20" r="5" />
+            <circle cx="182" cy="20" r="5" /><circle cx="208" cy="20" r="5" />
+            <circle cx="234" cy="20" r="5" />
+            <circle cx="26" cy="43" r="5" /><circle cx="52" cy="43" r="5" />
+            <circle cx="104" cy="43" r="5" /><circle cx="130" cy="43" r="5" />
+            <circle cx="156" cy="43" r="5" /><circle cx="182" cy="43" r="5" />
+            <circle cx="208" cy="43" r="5" />
+            <circle cx="26" cy="66" r="5" /><circle cx="52" cy="66" r="5" />
+            <circle cx="78" cy="66" r="5" /><circle cx="130" cy="66" r="5" />
+            <circle cx="156" cy="66" r="5" /><circle cx="208" cy="66" r="5" />
+            <circle cx="234" cy="66" r="5" />
+          </g>
+          <g fill="#c9200f">
+            <circle cx="78" cy="43" r="5.5" /><circle cx="234" cy="43" r="5.5" />
+            <circle cx="104" cy="66" r="5.5" /><circle cx="182" cy="66" r="5.5" />
+            <circle cx="130" cy="20" r="5.5" />
+          </g>
+          <circle cx="26" cy="43" r="7" fill="#ff2a1a" />
+        </svg>
+        <figcaption>Your carrier at the left. Five tacklers ahead.</figcaption>
+      </figure>
+
+      <h3>The number windows</h3>
+      <p>Press <span class="keycap">ST</span> and three numbers appear: the
+        down, your field position, and the yards to go.</p>
+
+      <p>Field position is shown with a small upright mark standing for the
+        50-yard line, and the number sits on the side of that mark where the
+        ball lies. <strong>42⊣</strong> is your own 42. <strong>⊢42</strong> is
+        your opponent's 42. At the 50 itself, no mark appears.</p>
+
+      <p>Inside your opponent's 10-yard line the yards-to-go window goes dark.
+        You have goal to go, and the goal line is the only marker that counts.</p>
+
+      <h3>The score window</h3>
+      <p>Press <span class="keycap">SC</span> for the score and the time left in
+        the quarter. Time is shown in tenths of a minute: <strong>7.5</strong>
+        is seven and one half minutes. At the end of a quarter the window reads
+        <strong>0.0</strong>.</p>
+
+      <p class="folio">4</p>
+    </section>
+
+    <!-- ============ 5. HOW TO PLAY ============ -->
+    <section class="page">
+      <h2>4. How to Play</h2>
+
+      <p>Gridiron is played by two, one on offense and one on defense, over four
+        quarters of fifteen minutes. The clock runs only while a play is live.</p>
+
+      <ol class="steps">
+        <li>The offense begins first and ten on his own 20-yard line.</li>
+        <li>The carrier lines up at the left of the field, in the centre lane.
+          The tacklers take their positions ahead of him. They do not line up
+          the same way twice.</li>
+        <li>The offense presses a direction key to start the play, then works
+          the carrier upfield one yard at a time.</li>
+        <li>The play ends the moment a tackler and the carrier stand on the same
+          blip &mdash; from the front, from the side, or from behind. The
+          whistle sounds and the tackler who made the stop blinks.</li>
+        <li>Press <span class="keycap">ST</span> or <span class="keycap">SC</span>.
+          The next play is set.</li>
+      </ol>
+
+      <h3>Making a first down</h3>
+      <p>You have four downs to gain ten yards. Gain them and you receive a
+        fresh first down. Fail on fourth down and the ball is lost where it
+        lies: two whistles sound.</p>
+
+      <h3>Running out of field</h3>
+      <p>The field is one hundred yards long, but only nine are lit at once. Run
+        past the ninth yard and the game returns your carrier to the left of the
+        display and the field advances nine yards beneath him. Fresh tacklers
+        will be waiting.</p>
+
+      <h3>The half</h3>
+      <p>Field position, down and yards to go carry across the breaks into the
+        second and fourth quarters. At the half, possession changes and the
+        second half opens first and ten on the new offense's own 20.</p>
+
+      <p class="folio">5</p>
+    </section>
+
+    <!-- ============ 6. SCORING & KICKING ============ -->
+    <section class="page">
+      <h2>5. Scoring and Kicking</h2>
+
+      <h3>Touchdown</h3>
+      <p>Carry the ball across your opponent's goal line and you score
+        <strong>seven points</strong>. The bugle sounds. The other side then
+        takes the ball, first and ten, on his own 20.</p>
+
+      <h3>The kick</h3>
+      <p>On fourth down, and on fourth down only, you may press
+        <span class="keycap">K</span> instead of running. The game measures the
+        kick &mdash; anywhere from one to sixty-five yards &mdash; and decides
+        what it was.</p>
+
+      <ol class="steps">
+        <li>If the kick carries as far as the goal line, it was a
+          <strong>field goal</strong>. Three points. The bugle sounds.</li>
+        <li>If it falls short, it was a <strong>punt</strong>. Two whistles
+          sound and no points are scored.</li>
+      </ol>
+
+      <p>The nearer you stand to the goal, the likelier the kick will reach it.
+        From beyond sixty-five yards no kick will ever carry that far, and every
+        attempt from there is a punt.</p>
+
+      <div class="note">
+        <strong>Two whistles</strong> always carry the same meaning: the drive
+        is over and no points were scored. You will hear them on a punt and on a
+        failed fourth down alike.
+      </div>
+
+      <h3>After a score</h3>
+      <p>Following a field goal the receiving side takes the ball first and ten
+        on his own 20-yard line.</p>
+
+      <p class="folio">6</p>
+    </section>
+
+    <!-- ============ 7. STRATEGY ============ -->
+    <section class="page">
+      <h2>6. Strategy</h2>
+
+      <h3>Watch the deep man</h3>
+      <p>One tackler always plays well back. He is the last man between your
+        carrier and the goal, and he is patient. Beating the front four means
+        nothing if you run straight into him.</p>
+
+      <h3>Draw them, then cut</h3>
+      <p>Tacklers pursue the lane you are standing in. Work toward one sideline
+        until they commit to it, then shift back across. The lane you left will
+        be emptier than the one you are in.</p>
+
+      <figure class="diagram">
+        <svg width="240" height="80" viewBox="0 0 240 80">
+          <rect width="240" height="80" fill="#2a0906" rx="5" />
+          <g fill="#5a0d08">
+            <circle cx="24" cy="18" r="4.5" /><circle cx="60" cy="18" r="4.5" />
+            <circle cx="96" cy="18" r="4.5" /><circle cx="132" cy="18" r="4.5" />
+            <circle cx="168" cy="18" r="4.5" /><circle cx="204" cy="18" r="4.5" />
+            <circle cx="24" cy="40" r="4.5" /><circle cx="60" cy="40" r="4.5" />
+            <circle cx="132" cy="40" r="4.5" /><circle cx="168" cy="40" r="4.5" />
+            <circle cx="24" cy="62" r="4.5" /><circle cx="96" cy="62" r="4.5" />
+            <circle cx="132" cy="62" r="4.5" /><circle cx="168" cy="62" r="4.5" />
+          </g>
+          <g fill="#c9200f">
+            <circle cx="96" cy="40" r="5" /><circle cx="60" cy="62" r="5" />
+            <circle cx="204" cy="40" r="5" />
+          </g>
+          <circle cx="24" cy="62" r="6.5" fill="#ff2a1a" />
+          <path d="M30 62 L52 62 M52 62 L74 44 M74 44 L110 44"
+                stroke="#f4efe4" stroke-width="1.5" fill="none"
+                stroke-dasharray="3 2" />
+        </svg>
+        <figcaption>Draw the pursuit low, then cut back across</figcaption>
+      </figure>
+
+      <h3>Do not simply hammer forward</h3>
+      <p>A tackler will bring you down from behind or from the side just as
+        readily as from in front. Running straight ahead as fast as the key will
+        accept presses will not save you; it will only carry you into someone.</p>
+
+      <h3>Mind the clock</h3>
+      <p>The clock runs only while the ball is live, so a drive that ends in
+        nothing has still cost you time you cannot get back. On fourth down,
+        weigh three points that are likely against seven that are not.</p>
+
+      <p class="folio">7</p>
+    </section>
+
+    <!-- ============ 8. CARE ============ -->
+    <section class="page">
+      <h2>7. Care of Your Game</h2>
+
+      <p>Your Gridiron is a precision electronic instrument. Treated properly it
+        will give many seasons of play.</p>
+
+      <ol class="steps">
+        <li>Keep the game dry. Do not use it in the rain, at poolside, or with
+          damp hands.</li>
+        <li>Keep it out of direct sun and away from radiators. Heat will dull
+          the display window and may warp the cabinet.</li>
+        <li>Do not drop the game or sit on it. The display is glass-faced.</li>
+        <li>Clean the cabinet with a soft cloth, lightly dampened. Never use
+          scouring powder, solvent, or alcohol on the window.</li>
+        <li>Do not attempt to open the cabinet beyond the battery cover. There
+          are no serviceable parts inside, and opening it voids the warranty.</li>
+        <li>Remove the battery before storing the game for any long period. A
+          spent battery may leak and ruin the contacts.</li>
+      </ol>
+
+      <div class="note">
+        Should the display show partial or scrambled numbers, switch to OFF,
+        wait a moment, and switch on again. This clears the game's memory and
+        begins a new contest.
+      </div>
+
+      <p class="folio">8</p>
+    </section>
+
+    <!-- ============ 9. WARRANTY ============ -->
+    <section class="page warranty">
+      <h2>8. VogelTronics 90-Day Limited Warranty</h2>
+
+      <p>VogelTronics warrants to the original purchaser that this product shall
+        be free of defects in material and workmanship for a period of ninety
+        (90) days from the date of purchase, under normal household use. For the
+        purposes of this warranty, "normal household use" shall mean use of a
+        normal kind, in a household.</p>
+
+      <p>Should the product prove defective within that period, VogelTronics
+        will at its option repair or replace it without charge for parts or
+        labour. Return the complete product, postage prepaid and insured, with
+        proof of the date of purchase and a brief note describing the fault, to:</p>
+
+      <p class="address">
+        VOGELTRONICS SERVICE DEPARTMENT<br />
+        DEPT. 2100<br />
+        855 BITTERSWEET LANE<br />
+        ELK GROVE VILLAGE, ILLINOIS 60007
+      </p>
+
+      <p>This warranty does not cover the battery, nor damage resulting from
+        misuse, accident, immersion, unreasonable use, burial, or service or
+        modification by anyone other than VogelTronics. It does not cover
+        products purchased second-hand. This warranty is void if the serial
+        plate has been removed, defaced, or improved.</p>
+
+      <p>Enclose the product only. The Service Department cannot return
+        photographs, keys, or correspondence not pertaining to the fault, and
+        does not keep them.</p>
+
+      <p>Any implied warranties arising out of the sale of this product,
+        including the implied warranties of merchantability and fitness for a
+        particular purpose, are limited to the ninety-day period described
+        above. VogelTronics shall not be liable for loss of use or any
+        incidental or consequential damages.</p>
+
+      <p>Some states do not allow limitations on how long an implied warranty
+        lasts, nor the exclusion of incidental or consequential damages, so the
+        limitations above may not apply to you. This warranty gives you specific
+        legal rights, and you may have other rights which vary from state to
+        state.</p>
+
+      <p style="margin-top: 12pt">
+        <strong>Service after the warranty period.</strong> Write to the
+        department above for a service estimate before returning any product.
+        Do not send payment with your inquiry.</p>
+
+      <p><strong>Games beyond repair.</strong> A game found to be beyond repair
+        is not returned. VogelTronics will write to you.</p>
+
+      <p class="folio">9</p>
+    </section>
+
+    <!-- ============ 10. BACK COVER ============ -->
+    <section class="page back">
+      <h2>Other Games That Think!</h2>
+
+      <ul class="catalog">
+        <li>
+          <span class="name">GRIDIRON 2 &nbsp;·&nbsp; NO. 2200</span>
+          <p class="blurb">Everything the original does &mdash; and now
+            <strong>THE FORWARD PASS.</strong> Two receivers downfield and a
+            ball in the air. Coming for the new season.</p>
+        </li>
+        <li>
+          <span class="name">ROVACON &nbsp;·&nbsp; NO. 3400</span>
+          <p class="blurb">The talking sentry. Hear it call out its orders in a
+            voice of its own. Requires 4 "C" cells.</p>
+        </li>
+        <li>
+          <span class="name">SPEEDWAY &nbsp;·&nbsp; NO. 1800</span>
+          <p class="blurb">Nine lanes of night driving, and traffic that never
+            once does what you expect.</p>
+        </li>
+        <li>
+          <span class="name">DOUBLE PLAY &nbsp;·&nbsp; NO. 1600</span>
+          <p class="blurb">Nine innings in the palm of your hand. Two players.
+            It fields, it throws, and it does not forgive a slow runner.</p>
+        </li>
+        <li>
+          <span class="name">THE COMPANION &nbsp;·&nbsp; NO. 4000</span>
+          <p class="blurb">Keeps the count. Learns the sound of your name in
+            about a week. One 9-volt battery. Not sold in Ohio.</p>
+        </li>
+      </ul>
+
+      <p class="houserule">
+        Should your Gridiron begin a game when no one has touched it, this is
+        normal. Allow it to finish.
+      </p>
+
+      <p class="sig">VOGELTRONICS · ELK GROVE VILLAGE, ILLINOIS</p>
+      <p class="sig" style="margin-top: 4pt; letter-spacing: 0.34em; color: #e0503c">
+        GAMES THAT THINK!
+      </p>
+
+      <p class="finest">
+        Printed in U.S.A. · Form 2100-INS-77 · Specifications subject to change without notice.
+        VogelTronics is a fictional company; this booklet is an original work of homage.
+      </p>
+    </section>
+  </body>
+</html>
